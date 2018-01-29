@@ -8,9 +8,9 @@
  */
 export interface IVAST3 {
   // Ads.
-  ads: Ad[];
+  ads: Ad[]
   // Version.
-  version: string;
+  version: string
 }
 
 /**
@@ -18,22 +18,22 @@ export interface IVAST3 {
  */
 export interface IBaseAd {
   // Ad type.
-  adType: AdType;
+  adType: AdType
   // Indicates source ad server.
-  adSystem: IAdSystem;
+  adSystem: IAdSystem
   // Impression trackers.
-  impressions: IAdImpression[];
+  impressions: IAdImpression[]
   // Contains all creative elements within an InLine or Wrapper Ad.
-  creative: ICreative[];
+  creative: ICreative[]
 
   // Ad identifier.
-  id?: string;
+  id?: string
   // Identifies the sequence of multiple Ads and defines an Ad Pod.
-  sequence?: number;
+  sequence?: number
   // Uri to request if ad does not play due to error.
-  error?: string;
+  error?: string
   // Ad extensions.
-  extensions?: Object[];
+  extensions?: Object[]
 }
 
 /**
@@ -41,18 +41,18 @@ export interface IBaseAd {
  */
 export interface IInlineAd extends IBaseAd {
   // Ad type.
-  adType: AdType.inline;
+  adType: AdType.inline
   // Common name of ad.
-  adTitle: string;
+  adTitle: string
 
   // Longer description of ad.
-  description?: string;
+  description?: string
   // Common name of advertiser.
-  advertiser?: string;
+  advertiser?: string
   // Ad pricing.
-  pricing?: IAdPricing;
+  pricing?: IAdPricing
   // Uri of request to survey vendor.
-  survey?: string;
+  survey?: string
 }
 
 /**
@@ -60,19 +60,19 @@ export interface IInlineAd extends IBaseAd {
  */
 export interface IWrappedAd extends IBaseAd {
   // Ad type.
-  adType: AdType.wrapper;
+  adType: AdType.wrapper
   // Uri of ad tag of downstream Secondary Ad Server.
-  VASTAdTagURI: string;
+  VASTAdTagURI: string
 }
 
-export type Ad = IInlineAd | IWrappedAd;
+export type Ad = IInlineAd | IWrappedAd
 
 /**
  * Ad types.
  */
 export enum AdType {
-  inline = "inline",
-  wrapper = "wrapper",
+  inline = 'inline',
+  wrapper = 'wrapper'
 }
 
 /**
@@ -80,9 +80,9 @@ export enum AdType {
  */
 export interface IAdSystem {
   // Ad server name.
-  name: string;
+  name: string
   // Internal version used by ad system.
-  version?: string;
+  version?: string
 }
 
 /**
@@ -90,11 +90,11 @@ export interface IAdSystem {
  */
 export interface IAdPricing {
   // Price.
-  value: number;
+  value: number
   // Pricing model.
-  model?: AdPricingModel;
+  model?: AdPricingModel
   // Currency (http://www.xe.com/iso4217.php).
-  currency?: string;
+  currency?: string
 }
 
 /**
@@ -102,13 +102,13 @@ export interface IAdPricing {
  */
 export enum AdPricingModel {
   // Cost per click.
-  cpc = "cpc",
+  cpc = 'cpc',
   // Cost per mille.
-  cpm = "cpm",
+  cpm = 'cpm',
   // Cost per engagement.
-  cpe = "cpe",
+  cpe = 'cpe',
   // Cost per view.
-  cpv = "cpv",
+  cpv = 'cpv'
 }
 
 /**
@@ -116,9 +116,9 @@ export enum AdPricingModel {
  */
 export interface IAdImpression {
   // Uri of the impression tracker.
-  uri: string;
+  uri: string
   // Unique id of the impression tracker.
-  id?: string;
+  id?: string
 }
 
 /**
@@ -126,28 +126,28 @@ export interface IAdImpression {
  */
 export interface ICreative {
   // Creative type.
-  creativeType: CreativeType;
+  creativeType: CreativeType
   // Duration in standard time format, hh:mm:ss.
-  duration: string;
+  duration: string
 
   // Creative extensions.
-  extensions?: Object[];
+  extensions?: Object[]
   // Data to be passed into the video ad.
-  adParameters?: IAdParameters;
+  adParameters?: IAdParameters
   // Event tracking.
-  trackings?: ITrackingEvent[];
+  trackings?: ITrackingEvent[]
   // Click on video trackings.
-  videoClicks?: IVideoClick;
+  videoClicks: IVideoClick
   // Mediafiles of the creative.
-  mediaFiles?: IMediaFile[];
+  mediaFiles: IMediaFile[]
   // The time at which the ad becomes skippable, if absent, the ad is not skippable.
-  skipoffset?: string;
+  skipoffset?: string
   // Identifier.
-  id?: string;
+  id?: string
   // The preferred order in which multiple Creatives should be displayed.
-  sequence?: number;
+  sequence?: number
   // Ad-ID for the creative (formerly ISCI) for wrapped Ads.
-  adID?: string;
+  adID?: string
 }
 
 /**
@@ -155,7 +155,7 @@ export interface ICreative {
  */
 export enum CreativeType {
   // Linear ad.
-  linear = "linear",
+  linear = 'linear'
 }
 
 /**
@@ -163,9 +163,9 @@ export enum CreativeType {
  */
 export interface IAdParameters {
   // Specifies whether the parameters are XML-encoded.
-  xmlEncoded: boolean;
+  xmlEncoded: boolean
   // The parameters.
-  value: string | Object;
+  value: string | Object
 }
 
 /**
@@ -174,38 +174,38 @@ export interface IAdParameters {
 export interface ITrackingEvent {
   // The name of the event to track. For nonlinear ads these events should be
   // recorded on the video within the ad.
-  event: TrackingEventType;
+  event: TrackingEventType
   // URI to call for specified event type.
-  uri: string;
+  uri: string
 
   // The time during the video at which this uri should be pinged.
   // Must be present for progress event.
-  offset?: string;
+  offset?: string
 }
 
 /**
  * Tracking event types.
  */
 export enum TrackingEventType {
-  creativeView = "creativeView",
-  start = "start",
-  firstQuartile = "firstQuartile",
-  midpoint = "midpoint",
-  thirdQuartile = "thirdQuartile",
-  complete = "complete",
-  mute = "mute",
-  unmute = "unmute",
-  pause = "pause",
-  rewind = "rewind",
-  resume = "resume",
-  fullscreen = "fullscreen",
-  exitFullscreen = "exitFullscreen",
-  expand = "expand",
-  collapse = "collapse",
-  acceptInvitation = "acceptInvitation",
-  close = "close",
-  skip = "skip",
-  progress = "progress",
+  creativeView = 'creativeView',
+  start = 'start',
+  firstQuartile = 'firstQuartile',
+  midpoint = 'midpoint',
+  thirdQuartile = 'thirdQuartile',
+  complete = 'complete',
+  mute = 'mute',
+  unmute = 'unmute',
+  pause = 'pause',
+  rewind = 'rewind',
+  resume = 'resume',
+  fullscreen = 'fullscreen',
+  exitFullscreen = 'exitFullscreen',
+  expand = 'expand',
+  collapse = 'collapse',
+  acceptInvitation = 'acceptInvitation',
+  close = 'close',
+  skip = 'skip',
+  progress = 'progress'
 }
 
 /**
@@ -213,21 +213,34 @@ export enum TrackingEventType {
  */
 export interface IVideoClick {
   // Uri to open as destination page when user clicks on the video.
-  clickThrough?: IClickTracking;
+  clickThrough: IClickTracking
   // Uris to request for tracking purposes when user clicks on the video.
-  clickTrackings?: IClickTracking[];
+  clickTrackings: IClickTracking[]
   // Uris to request on custom events such as hotspotted video.
-  customClicks?: IClickTracking[];
+  customClicks?: IClickTracking[]
 }
 
 /**
  * Click tracking uri.
  */
 export interface IClickTracking {
+  [key: string]: string
+
   // Uri to request on click.
-  uri: string;
+  uri: string
   // Optional id for this uri.
-  id?: string;
+  id: string
+}
+
+/**
+ * mimeType enum
+ */
+
+export enum mimetype {
+  'IMAGE_GIF' = 'image/gif',
+  'IMAGE_PNG' = 'image/png',
+  'IMAGE_JPEG' = 'image/jpeg',
+  'VIDEO_MP4' = 'video/mp4'
 }
 
 /**
@@ -235,41 +248,41 @@ export interface IClickTracking {
  */
 export interface IMediaFile {
   // Location of linear file.
-  uri: string;
+  uri: string
   // Method of delivery of ad.
-  delivery: DeliveryType;
+  delivery: DeliveryType
   // MIME type. Popular MIME types include, but are not limited to
   // “video/x-ms-wmv” for Windows Media, and “video/x-flv” for Flash Video.
   // Image ads or interactive ads can be included in the MediaFiles section with
   // appropriate Mime.
-  mimetype: string;
+  mimetype: mimetype
   // Pixel dimensions of video.
-  width: number;
+  width: number
   // Pixel dimensions of video.
-  height: number;
+  height: number
 
   // Optional identifier.
-  id?: string;
+  id?: string
   // Bitrate of encoded video in Kbps. If bitrate is supplied, minBitrate and
   // maxBitrate should not be supplied.
-  bitrate?: number;
+  bitrate?: number
   // Minimum bitrate of an adaptive stream in Kbps. If minBitrate is supplied,
   // maxBitrate must be supplied and bitrate should not be supplied.
-  minBitrate?: number;
+  minBitrate?: number
   // Maximum bitrate of an adaptive stream in Kbps. If maxBitrate is supplied,
   // minBitrate must be supplied and bitrate should not be supplied.
-  maxBitrate?: number;
+  maxBitrate?: number
   // Whether it is acceptable to scale the image.
-  scalable?: boolean;
+  scalable?: boolean
   // Whether the ad must have its aspect ratio maintained when scales.
-  maintainAspectRatio?: boolean;
+  maintainAspectRatio?: boolean
   // The apiFramework defines the method to use for communication if the MediaFile
   // is interactive. Suggested values for this element are “VPAID”, “FlashVars”
   // (for Flash/Flex), “initParams” (for Silverlight) and “GetVariables”.
   // (variables placed in key/value pairs on the asset request).
-  apiFramework?: string;
+  apiFramework?: string
   // The codec used to produce the media file.
-  codec?: string;
+  codec?: string
 }
 
 /**
@@ -277,5 +290,5 @@ export interface IMediaFile {
  */
 export enum DeliveryType {
   streaming = 1,
-  progressive = 2,
+  progressive = 2
 }

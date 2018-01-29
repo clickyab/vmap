@@ -1,17 +1,26 @@
 /**
  * Parse VMAP document to Json
  */
-import xmlConvert from "xml-js";
-import {IAdBreak, IExtension, IVMAP} from "./definitions/VMAP";
+import xmlConvert from 'xml-js'
+import { IAdBreak, IExtension, IVMAP } from './definitions/VMAP'
 import {
-  Ad, AdType, CreativeType, IAdImpression, ICreative, IInlineAd, IMediaFile, ITrackingEvent, IVAST3, IVideoClick,
-} from "./definitions/VAST3";
+  Ad,
+  AdType,
+  CreativeType,
+  IAdImpression,
+  ICreative,
+  IInlineAd,
+  IMediaFile,
+  ITrackingEvent,
+  IVAST3,
+  IVideoClick
+} from './definitions/VAST3'
 
 /**
  * main class for parse VMAP xml
  */
 export class VMAPParser {
-  private xml: string;
+  private xml: string
 
   /**
    * @constructor
@@ -19,8 +28,7 @@ export class VMAPParser {
    * @param {string} xml
    */
   constructor(xml?: string) {
-    if (xml)
-      this.xml = xml;
+    if (xml) this.xml = xml
   }
 
   /**
@@ -29,19 +37,21 @@ export class VMAPParser {
    * @returns {IVMAP}
    */
   public JSON(xml?: string): IVMAP {
-
     if (!xml && !this.xml) {
-      throw "XML input is required."
+      throw 'XML input is required.'
     }
 
-    const xmlString: string = xml || this.xml;
+    const xmlString: string = xml || this.xml
 
-    const xmlObj: any = xmlConvert.xml2json(xmlString, {compact: true, spaces: 4});
-    const VMAP = JSON.parse(xmlObj).VMAP;
+    const xmlObj: any = xmlConvert.xml2json(xmlString, {
+      compact: true,
+      spaces: 4
+    })
+    const VMAP = JSON.parse(xmlObj).VMAP
     return {
       version: this.getVersion(VMAP),
-      breaks: VMAP.AdBreak.map(this.getBreaks.bind(this)),
-    };
+      breaks: VMAP.AdBreak.map(this.getBreaks.bind(this))
+    }
   }
 
   /**
@@ -50,7 +60,7 @@ export class VMAPParser {
    * @returns {string}
    */
   private getVersion(VMAP: any): string {
-    return VMAP._attributes.version;
+    return VMAP._attributes.version
   }
 
   /**
@@ -71,11 +81,13 @@ export class VMAPParser {
         allowMultipleAds: AdBreak.AdSource.allowMultipleAds,
         dataType: AdBreak.AdSource._attributes.dataType,
         followRedirects: AdBreak.AdSource._attributes.followRedirects,
-        customAdData: AdBreak.AdSource.customAdData,
+        customAdData: AdBreak.AdSource.customAdData
       },
-      extensions: AdBreak.Extensions ? this.parseExtensions(AdBreak.Extensions.Extension) : [],
-      repeatAfter: AdBreak._attributes.repeatAfter,
-    };
+      extensions: AdBreak.Extensions
+        ? this.parseExtensions(AdBreak.Extensions.Extension)
+        : [],
+      repeatAfter: AdBreak._attributes.repeatAfter
+    }
   }
 
   /**
@@ -87,7 +99,7 @@ export class VMAPParser {
     return {
       version: vast._attributes.version,
       ads: this.parseAd(vast.Ad)
-    };
+    }
   }
 
   /**
@@ -101,11 +113,13 @@ export class VMAPParser {
       id: ad._attributes.id,
       adSystem: {
         version: ad.InLine.AdSystem._attributes.version,
-        name: ad.InLine.AdSystem._cdata,
+        name: ad.InLine.AdSystem._cdata
       },
       adTitle: ad.InLine.AdTitle._cdata,
       adType: AdType.inline,
-      extensions: ad.InLine.Extensions.Extension ? this.parseExtensions(ad.InLine.Extensions.Extension) : [],
+      extensions: ad.InLine.Extensions.Extension
+        ? this.parseExtensions(ad.InLine.Extensions.Extension)
+        : [],
       creative: this.parseCreative(ad.InLine.Creatives.Creative),
       error: ad.InLine.Error ? ad.InLine.Error._text : null,
       sequence: ad.InLine.Sequence ? ad.InLine.Sequence._text : null,
@@ -113,13 +127,19 @@ export class VMAPParser {
       advertiser: ad.InLine.Advertiser ? ad.InLine.Advertiser._text : null,
       pricing: {
         value: ad.InLine.Pricing._text,
-        currency: ad.InLine.Pricing._attributes ? ad.InLine.Pricing._attributes.currency : null,
-        model: ad.InLine.Pricing._attributes ? ad.InLine.Pricing._attributes.model : null,
+        currency: ad.InLine.Pricing._attributes
+          ? ad.InLine.Pricing._attributes.currency
+          : null,
+        model: ad.InLine.Pricing._attributes
+          ? ad.InLine.Pricing._attributes.model
+          : null
       },
       survey: ad.InLine.Survey._text || ad.InLine.Survey._cdata,
-      impressions: ad.InLine.Imperssions ? this.parseImpression(ad.InLine.Imperssions.Imperssion) : [],
-    };
-    return [liner];
+      impressions: ad.InLine.Imperssions
+        ? this.parseImpression(ad.InLine.Imperssions.Imperssion)
+        : []
+    }
+    return [liner]
     // }
   }
 
@@ -129,12 +149,12 @@ export class VMAPParser {
    * @returns {ICreative[]}
    */
   private parseCreative(creativeInput: any): ICreative[] {
-    let creativeArray = creativeInput;
+    let creativeArray = creativeInput
     if (!Array.isArray(creativeInput)) {
-      creativeArray = [creativeInput];
+      creativeArray = [creativeInput]
     }
 
-    let creativeOutputArray: ICreative[] = [];
+    let creativeOutputArray: ICreative[] = []
 
     creativeArray.forEach((creative: any) => {
       const c: ICreative = {
@@ -142,17 +162,18 @@ export class VMAPParser {
         adID: creative._attributes ? creative._attributes.AdID : null,
         sequence: creative._attributes ? creative._attributes.sequence : null,
         skipoffset: creative.Linear._attributes.skipoffset,
-        trackings: this.parseTrackingEvents(creative.Linear.TrackingEvents.Tracking),
+        trackings: this.parseTrackingEvents(
+          creative.Linear.TrackingEvents.Tracking
+        ),
         videoClicks: this.parseVideoClicks(creative.Linear.VideoClicks),
         extensions: creative.CreativeExtensions,
         mediaFiles: this.parseMediaFile(creative.Linear.MediaFiles.MediaFile),
         duration: creative.Linear.Duration._text,
         creativeType: CreativeType.linear
-      };
-      creativeOutputArray.push(c);
-    });
-    return creativeOutputArray;
-
+      }
+      creativeOutputArray.push(c)
+    })
+    return creativeOutputArray
   }
 
   /**
@@ -161,12 +182,12 @@ export class VMAPParser {
    * @returns {IMediaFile[]}
    */
   private parseMediaFile(mediaFilesInput: any) {
-    let mediaFilesArray = mediaFilesInput;
+    let mediaFilesArray = mediaFilesInput
     if (!Array.isArray(mediaFilesInput)) {
-      mediaFilesArray = [mediaFilesInput];
+      mediaFilesArray = [mediaFilesInput]
     }
 
-    let mediaFilesOutputArray: IMediaFile[] = [];
+    let mediaFilesOutputArray: IMediaFile[] = []
     mediaFilesArray.forEach((file: any) => {
       const f: IMediaFile = {
         id: file._attributes.id,
@@ -182,13 +203,11 @@ export class VMAPParser {
         scalable: file._attributes.scalable,
         maintainAspectRatio: file._attributes.maintainAspectRatio,
         uri: file._cdata
+      }
+      mediaFilesOutputArray.push(f)
+    })
 
-      };
-      mediaFilesOutputArray.push(f);
-    });
-
-    return mediaFilesOutputArray;
-
+    return mediaFilesOutputArray
   }
 
   /**
@@ -197,23 +216,21 @@ export class VMAPParser {
    * @returns {ITrackingEvent[]}
    */
   private parseTrackingEvents(trackingInput: any): ITrackingEvent[] {
-    let trackingInputArray = trackingInput;
+    let trackingInputArray = trackingInput
     if (!Array.isArray(trackingInput)) {
-      trackingInputArray = [trackingInput];
+      trackingInputArray = [trackingInput]
     }
 
-    let trackingOutputArray: ITrackingEvent[] = [];
+    let trackingOutputArray: ITrackingEvent[] = []
     trackingInputArray.forEach((tracking: any) => {
       const f: ITrackingEvent = {
         uri: tracking._cdata,
         event: tracking._attributes.event
+      }
+      trackingOutputArray.push(f)
+    })
 
-      };
-      trackingOutputArray.push(f);
-    });
-
-    return trackingOutputArray;
-
+    return trackingOutputArray
   }
 
   /**
@@ -222,47 +239,48 @@ export class VMAPParser {
    * @returns {IVideoClick}
    */
   private parseVideoClicks(videoClickInput: any): IVideoClick {
-
-    const f: IVideoClick = {};
-    if (videoClickInput.clickThrough) {
+    const f: IVideoClick = {
+      clickTrackings: [],
+      clickThrough: { uri: '', id: '' }
+    }
+    if (videoClickInput.ClickThrough) {
       f.clickThrough = {
-        uri: videoClickInput.clickThrough._cdata,
-        id: videoClickInput.clickThrough._attributes.id,
+        uri: videoClickInput.ClickThrough._cdata,
+        id: videoClickInput.ClickThrough._attributes.id
       }
     }
 
     if (videoClickInput.clickTrackings) {
-      let clickTracking = videoClickInput.clickTrackings;
+      let clickTracking = videoClickInput.clickTrackings
       if (!Array.isArray(videoClickInput.clickTrackings)) {
-        clickTracking = [clickTracking];
+        clickTracking = [clickTracking]
       }
-      f.clickTrackings = [];
+      f.clickTrackings = []
       clickTracking.forEach((c: any) => {
         if (f.clickTrackings)
           f.clickTrackings.push({
             uri: c._cdata,
-            id: c._attributes.id,
+            id: c._attributes.id
           })
       })
     }
 
     if (videoClickInput.customClicks) {
-      let customClicks = videoClickInput.customClicks;
+      let customClicks = videoClickInput.customClicks
       if (!Array.isArray(videoClickInput.customClicks)) {
-        customClicks = [customClicks];
+        customClicks = [customClicks]
       }
-      f.customClicks = [];
+      f.customClicks = []
       customClicks.forEach((c: any) => {
         if (f.customClicks)
           f.customClicks.push({
             uri: c._cdata,
-            id: c._attributes.id,
+            id: c._attributes.id
           })
       })
     }
 
-    return f;
-
+    return f
   }
 
   /**
@@ -271,24 +289,21 @@ export class VMAPParser {
    * @returns {IExtension[]}
    */
   private parseExtensions(extensionsInput: any): IExtension[] {
-
-    let extensionsArray = extensionsInput;
+    let extensionsArray = extensionsInput
     if (!Array.isArray(extensionsInput)) {
-      extensionsArray = [extensionsInput];
+      extensionsArray = [extensionsInput]
     }
 
-    let extensionsOutputArray: IExtension[] = [];
+    let extensionsOutputArray: IExtension[] = []
     extensionsArray.forEach((extension: any) => {
       const e: IExtension = {
         value: extension._text,
-        extensionType: extension._attributes ? extension._attributes.type : null,
+        extensionType: extension._attributes ? extension._attributes.type : null
+      }
+      extensionsOutputArray.push(e)
+    })
 
-      };
-      extensionsOutputArray.push(e);
-    });
-
-    return extensionsOutputArray;
-
+    return extensionsOutputArray
   }
 
   /**
@@ -297,24 +312,23 @@ export class VMAPParser {
    * @returns {IAdImpression[]}
    */
   private parseImpression(impressionInput: any): IAdImpression[] {
-    let impressionInputArray = impressionInput;
+    let impressionInputArray = impressionInput
     if (!Array.isArray(impressionInput)) {
-      impressionInputArray = [impressionInput];
+      impressionInputArray = [impressionInput]
     }
 
-    let impressionOutput: IAdImpression[] = [];
+    let impressionOutput: IAdImpression[] = []
     impressionInputArray.forEach((impression: any) => {
       impressionOutput.push({
         uri: impression._cdata
       })
-    });
+    })
 
-    return impressionOutput;
-
+    return impressionOutput
   }
 }
 
 /**
  * export new Object of class
  */
-export default new VMAPParser();
+export default new VMAPParser()
