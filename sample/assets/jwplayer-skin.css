@@ -1,0 +1,492 @@
+@font-face {
+    font-family: 'jw-jabeh';
+    src: url('./fonts/jw-jabeh.woff');
+}
+
+.jw-icon {
+    font-family: 'jw-jabeh';
+    -webkit-font-smoothing: antialiased;
+    font-style: normal;
+    font-weight: normal;
+    text-transform: none;
+    background-color: transparent;
+    font-variant: normal;
+    -webkit-font-feature-settings: "liga";
+    -moz-font-feature-settings: "liga=1";
+    -moz-font-feature-settings: "liga";
+    -ms-font-feature-settings: "liga" 1;
+    -o-font-feature-settings: "liga";
+    font-feature-settings: "liga";
+    -moz-osx-font-smoothing: grayscale
+}
+
+/* Use this class to set a global background color for all elemnts. */
+.jw-skin-jabeh .jw-background-color {
+    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0);
+    background: -moz-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(0, 0, 0, 0)), color-stop(100%, rgba(0, 0, 0, 1)));
+    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+    background: -o-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+    background: -ms-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#000000', endColorstr='#000000', GradientType=0);
+}
+
+/* This is the class that houses all controls. Use this to adjust the appearance of the entire controlbar. */
+.jw-skin-jabeh .jw-controlbar {
+    height: 2.5em;
+    padding: 10px;
+}
+
+/* Vertically aligns the timeslider and icons in the center of the controlbar. */
+.jw-skin-jabeh .jw-group {
+    vertical-align: middle;
+}
+
+/* Sets the style for the visual playlist. */
+
+.jw-skin-jabeh .jw-playlist {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Aligns the visual playlist above its icon. */
+
+.jw-skin-jabeh .jw-playlist-container {
+    left: -43%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Sets the style for the visual playlist items. */
+.jw-skin-jabeh .jw-playlist-container .jw-option {
+    border-bottom: 1px solid #444;
+}
+
+/* Allows you to adjust the color of the playlist item when hovering and has a different active style.*/
+
+.jw-skin-jabeh .jw-playlist-container .jw-option:hover,
+.jw-skin-jabeh .jw-playlist-container .jw-option.jw-active-option {
+    background-color: black;
+}
+
+/* Changes the color of the label when hovering.*/
+
+.jw-skin-jabeh .jw-playlist-container .jw-option:hover .jw-label {
+    color: #EC4E32;
+}
+
+/* Aligns the playlist header icon with the items in the playlist. */
+.jw-skin-jabeh .jw-playlist-container .jw-icon-playlist {
+    margin-left: 0;
+}
+
+/* Sets the color of the play icon of the currently playing playlist item.*/
+.jw-skin-jabeh .jw-playlist-container .jw-label .jw-icon-play {
+    color: #EC4E32;
+}
+
+/* Aligns the playlist play icon with the items in the playlist. */
+.jw-skin-jabeh .jw-playlist-container .jw-label .jw-icon-play:before {
+    padding-left: 0
+}
+
+/* Sets the color of the playlist title */
+.jw-skin-jabeh .jw-tooltip-title {
+    background-color: #000;
+    color: #fff;
+    direction: rtl;
+}
+
+/* Style for playlist item, current time, qualities, and caption text.*/
+.jw-skin-jabeh .jw-text {
+    color: #ffffff;
+}
+
+/* Color for all buttons when they are inactive. This is over-ridden with the
+inactive configuration in the skin block.*/
+.jw-skin-jabeh .jw-button-color {
+    color: #ffffff;
+    font-size: 20px;
+    transition: 0.2s all;
+}
+
+/* Color for all buttons for when they are hovered on. This is over-ridden with the
+active configuration in the skin block.*/
+
+.jw-skin-jabeh .jw-button-color:hover {
+    color: #EC4E32;
+}
+
+/* Color for when HD/CD icons are toggled on. */
+.jw-skin-jabeh .jw-toggle {
+    color: #EC4E32;
+}
+
+/* Color for when HD/CD icons are toggled off. */
+.jw-skin-jabeh .jw-toggle.jw-off {
+    color: #ffffff;
+}
+
+/* Sets spacing between controlbar icons and text */
+.jw-skin-jabeh .jw-controlbar .jw-icon:before,
+.jw-skin-jabeh .jw-text-elapsed,
+.jw-skin-jabeh .jw-text-duration {
+    padding: 0 .7em;
+
+}
+
+.jw-text-duration {
+    margin-right: 9px !important;
+}
+
+/* Removes icon padding to align the playlist header icon with the items in the playlist. */
+.jw-skin-jabeh .jw-controlbar .jw-icon-prev:before {
+    padding-right: .25em;
+}
+
+/* Removes icon padding to align the playlist header icon with the items in the playlist. */
+.jw-skin-jabeh .jw-controlbar .jw-icon-playlist:before {
+    padding: 0 .45em;
+}
+
+.jw-skin-jabeh .jw-controlbar .jw-icon-next:before {
+    padding-left: .25em
+}
+
+/* Sets the style for the prev and next icons. */
+.jw-skin-jabeh .jw-icon-prev,
+.jw-skin-jabeh .jw-icon-next {
+    font-size: .7em;
+}
+
+/* Adds the spacer style to between the play icon and the previous icon. */
+.jw-skin-jabeh .jw-icon-prev:before {
+    border-left: 1px solid #666;
+}
+
+/* Adds the spacer style to between the next item and current time.  */
+.jw-skin-jabeh .jw-icon-next:before {
+    border-right: 1px solid #666;
+}
+
+/* Color of the display icon */
+.jw-skin-jabeh .jw-icon-display {
+    color: #fff;
+}
+
+/* Centers the display icon in it's container */
+.jw-skin-jabeh .jw-icon-display:before {
+    padding-left: 0;
+}
+
+/* Turns the display icon container into a circle. */
+.jw-skin-jabeh .jw-display-icon-container {
+    border-radius: 9%;
+    background: rgba(0, 0, 0, 0.4) !important;
+    transition: 0.3s all;
+    padding: 15px;
+    width: 80px;
+    height: 80px;
+    font-size: 20px;
+
+}
+
+/* Styles the timeslider rail */
+.jw-skin-jabeh .jw-rail {
+    background-color: rgba(240, 240, 240, 0.50);
+    box-shadow: none;
+}
+
+/* Sets the color for the buffer of the timeslider rail. */
+.jw-skin-jabeh .jw-buffer {
+    background-color: rgba(240, 240, 240, 0.40);
+}
+
+/* Sets the style for the elaspesd progress. */
+.jw-skin-jabeh .jw-progress {
+    background: #EC4E32;
+}
+
+/* Sets the width of the knob's container */
+.jw-skin-jabeh .jw-knob {
+    width: .6em;
+    height: .6em;
+    background-color: #EC4E32;
+    box-shadow: 0;
+    border-radius: 1em;
+}
+
+/* Sets the height for the horizontal slider container. */
+.jw-skin-jabeh .jw-slider-horizontal .jw-slider-container {
+    height: .95em
+}
+
+/* Sets the height for the horizontal slider elements. */
+.jw-skin-jabeh .jw-slider-horizontal .jw-rail,
+.jw-skin-jabeh .jw-slider-horizontal .jw-buffer,
+.jw-skin-jabeh .jw-slider-horizontal .jw-progress {
+    height: .2em;
+    border-radius: 0
+}
+
+/* Centers the knob vertically. */
+.jw-skin-jabeh .jw-slider-horizontal .jw-knob {
+    top: -0.19999999999999998em
+}
+
+/* Cetners the timeslider cuepoints vertically. */
+.jw-skin-jabeh .jw-slider-horizontal .jw-cue {
+    top: -0.04999999999999999em;
+    width: .3em;
+    height: .3em;
+    background-color: #fff;
+    border-radius: 50%
+}
+
+/* Sets the width for the vertical slider elements. */
+.jw-skin-jabeh .jw-slider-vertical .jw-rail,
+.jw-skin-jabeh .jw-slider-vertical .jw-buffer,
+.jw-skin-jabeh .jw-slider-vertical .jw-progress {
+    width: .2em
+}
+
+/* Sets the position of the volume slider container. */
+.jw-skin-jabeh .jw-volume-tip {
+    width: 100%;
+    left: -45%;
+    padding-bottom: .7em;
+    background: transparent;
+}
+
+/* Sets the color of the duration text in the controlbar. */
+.jw-skin-jabeh .jw-text-duration {
+    color: #dadada;
+}
+
+/* Adds a left border as a spacer between all contorlbar icons. */
+.jw-skin-jabeh .jw-controlbar-right-group .jw-icon-tooltip:before,
+.jw-skin-jabeh .jw-controlbar-right-group .jw-icon-inline:before {
+    border-left: 1px solid #666
+}
+
+/* Removes the border from the first icon after the time duration text. */
+.jw-skin-jabeh .jw-controlbar-right-group .jw-icon-inline:first-child:before {
+    border: 0
+}
+
+/* This styles the dock icons into a circle. */
+.jw-skin-jabeh .jw-dock .jw-dock-button {
+    border-radius: 50%;
+    /*border: 1px solid #333*/
+}
+
+/* This styles tooltip for dock text background. */
+.jw-skin-jabeh .jw-dock .jw-overlay {
+    border-radius: 2.5em
+}
+
+/*This sets the font color and background color for the active item in HD and CC menus. */
+.jw-skin-jabeh .jw-icon-tooltip .jw-active-option {
+    background-color: #EC4E32;
+    color: #fff
+}
+
+/* Sets a min width for the volume container so that when it changes between mute and volume, the controlbar does not shift. */
+.jw-skin-jabeh .jw-icon-volume {
+    min-width: 2.6em
+}
+
+/* Sets the style for the time tooltip, menu, volume. */
+.jw-skin-jabeh .jw-time-tip,
+.jw-skin-jabeh .jw-menu,
+.jw-skin-jabeh .jw-volume-tip,
+.jw-skin-jabeh .jw-skip {
+    margin-bottom: 5px;
+}
+
+/* Sets the position for the time tooltip. */
+.jw-skin-jabeh .jw-time-tip {
+    padding: .2em;
+    bottom: 1.3em;
+    background: rgba(0, 0, 0, 0.5);
+    line-height: 100%;
+}
+
+/* Sets the position for the vertical volume slider. */
+.jw-skin-jabeh .jw-menu,
+.jw-skin-jabeh .jw-volume-tip {
+    bottom: .24em;
+    top: 3px;
+    background: rgba(0, 0, 0, 0.4);
+    border: none;
+    color: white;
+}
+
+.jw-time-tip.jw-background-color.jw-reset {
+    background: rgba(0, 0, 0, 0.4);
+    border: none;
+    color: white;
+    bottom: 0.6em !important;
+}
+
+.jw-time-tip.jw-background-color.jw-reset .jw-text {
+    line-height: 1.35em !important;
+}
+
+.jw-controlbar .jw-overlay {
+    /*bottom: 1em !important;*/
+}
+
+/* Sets the shape of the skip icon. */
+.jw-skin-jabeh .jw-skip {
+    padding: .4em;
+    border-radius: 1.75em
+}
+
+/* Sets the style for the skip text. */
+.jw-skin-jabeh .jw-skip .jw-text,
+.jw-skin-jabeh .jw-skip .jw-icon-inline {
+    color: #fff;
+    line-height: 1.75em
+}
+
+.jw-skin-jabeh .jw-skip.jw-skippable:hover .jw-text,
+.jw-skin-jabeh .jw-skip.jw-skippable:hover .jw-icon-inline {
+    color: #EC4E32;
+}
+
+.jw-rightclick.jw-reset.jw-open {
+    display: none !important;
+}
+
+.jw-slider-time.jw-background-color {
+    background: transparent;
+}
+
+.jw-time-tip, .jw-volume-tip, .jw-menu {
+    border: none;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.jw-title-primary, .jw-title-secondary {
+    direction: rtl !important;;
+    text-align: right !important;
+    float: right !important;
+    font-family: 'Iran-Sans-light' !important;
+    line-height: 250% !important;
+    padding: 8px 15px !important;
+}
+
+.jw-title-primary {
+    font-family: "Iran-Sans-bold";
+}
+
+.jw-title-secondary {
+    font-family: "Iran-Sans-light";
+    font-size: 12px !important;
+}
+
+.jw-icon.jw-icon-display.jw-button-color {
+    font-size: 35px;
+
+}
+
+.jw-skin-jabeh {
+    font-family: tahoma !important;
+}
+
+.jw-logo-image {
+    width: 70px;
+}
+
+.jw-controls .jw-controls-right {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.jw-logo {
+    /*position: absolute;*/
+    bottom: 5px !important;
+    /*right: 10px;*/
+    /*opacity: 0.5;*/
+    /*transition:0.3s all;*/
+    /*width: 100px !important;*/
+    /*height: 41px !important;*/
+}
+
+.jw-logo-bottom-right {
+    bottom: 0 !important;
+}
+
+.jw-logo:hover {
+    opacity: 1 !important;
+}
+
+.jw-text.jw-option {
+    font-size: 13px;
+    font-family: "Iran-Sans-light";
+}
+
+#video_top_showtime, #video_showtime {
+    color: white;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+    font-family: "Iran-Sans-light";
+}
+
+#video_embed_showtime {
+    color: white;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+    font-family: "Iran-Sans-light";
+}
+
+.jw-controlbar.jw-background-color {
+    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0);
+    background: -moz-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(0, 0, 0, 0)), color-stop(100%, rgba(0, 0, 0, 1)));
+    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+    background: -o-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+    background: -ms-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#000000', endColorstr='#000000', GradientType=0);
+
+}
+
+.jw-icon-inline, .jw-icon-tooltip, .jw-slider-horizontal, .jw-text-duration, .jw-text-elapsed {
+    padding: 0 !important;
+}
+
+.jw-controlbar-center-group {
+    position: absolute;
+    bottom: 36px;
+    margin: 0 1%;
+    width: 98%;
+}
+
+.jw-controlbar-left-group {
+    position: absolute;
+    bottom: -5px;
+    margin: 0 1%;
+    left: 5px
+}
+
+.jw-controlbar-right-group {
+    position: absolute;
+    bottom: -5px;
+    margin: 0 1%;
+    right: 5px;
+}
+
+.jw-icon-rewind {
+  display: none !important;
+}
