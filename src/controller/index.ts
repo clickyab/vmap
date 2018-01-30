@@ -16,13 +16,15 @@ export default class Controller {
     /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
   )
   private clickEvent = this.isMobile ? 'touchstart' : 'click'
+  private linkWrapper: boolean = false
 
   constructor(
     jwplayer: JWPlayerStatic,
     player: any,
     div: HTMLElement,
     title: string,
-    src: string
+    src: string,
+    linkWrapper: boolean = false
   ) {
     console.debug('Create controller overlay instance.')
     this.jwplayer = jwplayer
@@ -30,21 +32,21 @@ export default class Controller {
     this.player = player
     this.title = title
     this.src = src
+    this.linkWrapper = linkWrapper
   }
 
   public show() {
     console.debug('Show controller overlay.')
     this.setTimeLine({ position: 0, duration: 0, type: 'start' })
-    // if (!this.overlay) {
     this.overlay = this.getWrapperElement()
     this.div.appendChild(this.overlay)
-    // }
-    // this.div.style.display = "";
   }
 
   public remove() {
     console.debug('Remove controller overlay element.')
-    if (this.div) this.div.style = ''
+    if (this.div) {
+      this.div.style = ''
+    }
     this.overlay.remove()
   }
 
@@ -61,7 +63,22 @@ export default class Controller {
   }
 
   private getWrapperElement(): HTMLElement {
-    let wrapper = document.createElement('div')
+    let wrapper
+    if (this.linkWrapper) {
+      wrapper = document.createElement('a')
+      wrapper.href = this.src
+      wrapper.target = 'blank'
+    } else {
+      wrapper = document.createElement('div')
+    }
+
+    wrapper.onclick = () => {
+      if (this.player.getState() === 'playing') {
+        this.player.pause()
+      } else {
+        this.player.play()
+      }
+    }
 
     this.div.style.position = 'absolute'
     this.div.style.top = '0px'
@@ -146,7 +163,7 @@ export default class Controller {
     pauseBtn.style.zIndex = '214783647'
     pauseBtn.style.marginRight = '0px'
     pauseBtn.style.boxShadow = '0px'
-    pauseBtn.onclick = () => {
+    pauseBtn.onclick = e => {
       this.player.pause()
     }
 
