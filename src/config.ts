@@ -1,3 +1,6 @@
+/**
+ * Config of the JwPlayer
+ */
 const CONFIG = {
   PROVIDE_LINK: 'https://clickyab.com',
   PROVIDE_NAME: 'ClickYab',

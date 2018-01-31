@@ -1,29 +1,107 @@
+/**
+ * Ad's controller
+ * This class show video and image controller and buttons on front of the player
+ */
+
 import CONFIG from './../config'
+import { IPosition } from '../jwplayer-plugin/plugin'
 
 export default class Controller {
+  /**
+   * JwPlayer Instance
+   */
   private jwplayer: JWPlayerStatic
+
+  /**
+   * Player reference
+   */
   private player: any
+
+  /**
+   * Plugin's div element that provide by JwPlayer
+   */
   private div: HTMLElement
+
+  /**
+   * Title or TLD of the ad
+   */
   private title: string
+
+  /**
+   * Source of the ad's. This is the link of ads
+   */
   private src: string
+
+  /**
+   * Show ad's skip button timeoffset
+   */
+  private skipAfter: number
+
+  /**
+   * Element of count down
+   */
   private skipCountDown: HTMLElement
+
+  /**
+   * Element of player time line
+   */
   private playerTimeLine: HTMLElement
+
+  /**
+   * on click on ad link event
+   */
   private onOpenAdClick: () => void
+
+  /**
+   * on ad's show video end event
+   */
   private onEnd: () => void
+
+  /**
+   * on skip ad's video click event
+   */
   private onSkip: () => void
+
+  /**
+   * Overlay element
+   */
   private overlay: HTMLElement
+
+  /**
+   * define the user's browser is mobile or not
+   */
   private isMobile = window.navigator.userAgent.match(
     /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
   )
+
+  /**
+   * define click event name
+   */
   private clickEvent = this.isMobile ? 'touchstart' : 'click'
+
+  /**
+   * Link all controller area to ad's link or not
+   * @type {boolean}
+   */
   private linkWrapper: boolean = false
 
+  /**
+   * @constructor
+   * @param {JWPlayerStatic} jwplayer
+   * @param player
+   * @param {HTMLElement} div
+   * @param {string} title
+   * @param {string} src
+   * @param {number} skipAfter
+   * @param {boolean} linkWrapper
+   */
   constructor(
     jwplayer: JWPlayerStatic,
     player: any,
     div: HTMLElement,
     title: string,
     src: string,
+    skipAfter: number,
     linkWrapper: boolean = false
   ) {
     console.debug('Create controller overlay instance.')
@@ -32,9 +110,14 @@ export default class Controller {
     this.player = player
     this.title = title
     this.src = src
+    this.skipAfter = skipAfter
     this.linkWrapper = linkWrapper
   }
 
+  /**
+   * @func show
+   * @desc show controller over the player.
+   */
   public show() {
     console.debug('Show controller overlay.')
     this.setTimeLine({ position: 0, duration: 0, type: 'start' })
@@ -42,28 +125,50 @@ export default class Controller {
     this.div.appendChild(this.overlay)
   }
 
+  /**
+   * @func remove
+   * @desc remove controller element and erase all its elements.
+   */
   public remove() {
     console.debug('Remove controller overlay element.')
-    if (this.div) {
-      this.div.style = ''
-    }
-    this.overlay.remove()
+    this.div.setAttribute('style', '')
+    this.div.innerHTML = ''
   }
 
+  /**
+   * @func setOnSkip
+   * @desc set on skip event
+   * @param {() => void} fn
+   */
   public setOnSkip(fn: () => void) {
     this.onSkip = fn
   }
 
+  /**
+   * @func setOnEnd
+   * @desc set on end event
+   * @param {() => void} fn
+   */
   public setOnEnd(fn: () => void) {
     this.onEnd = fn
   }
 
+  /**
+   * @func setOnAdClick
+   * @desc set on ad click event
+   * @param {() => void} fn
+   */
   public setOnAdClick(fn: () => void) {
     this.onOpenAdClick = fn
   }
 
+  /**
+   * @func getWrapperElement
+   * @desc generate and set wrapper element of controller
+   * @returns {HTMLElement}
+   */
   private getWrapperElement(): HTMLElement {
-    let wrapper
+    let wrapper: HTMLDivElement | HTMLAnchorElement
     if (this.linkWrapper) {
       wrapper = document.createElement('a')
       wrapper.href = this.src
@@ -87,7 +192,7 @@ export default class Controller {
     this.div.style.right = '0px'
     this.div.style.zIndex = '100'
 
-    wrapper.id = 'vmap-image-wrapper'
+    wrapper.id = 'vmap-wrapper'
     wrapper.style.position = 'absolute'
     wrapper.style.top = '0px'
     wrapper.style.bottom = '0px'
@@ -96,35 +201,52 @@ export default class Controller {
 
     wrapper.appendChild(this.getAdLink(this.title))
     wrapper.appendChild(this.getFullScreenButton())
-    wrapper.appendChild(this.getSkipAd())
     wrapper.appendChild(this.getPauseButton())
     wrapper.appendChild(this.getProviderClick())
     wrapper.appendChild(this.getTimeLineWrapper())
+    wrapper.appendChild(this.getShadow())
+
+    console.log(this.skipAfter)
+    setTimeout(() => {
+      wrapper.appendChild(this.getSkipAd())
+    }, this.skipAfter * 1000)
+
     return wrapper
   }
 
-  public setTimeLine(position: {
-    duration: number
-    position: number
-    type: string
-  }) {
-    // console.debug("set time position.", position);
+  /**
+   * @func setTimeLine
+   * @desc set position of ad's player and calculate position of timeline jack
+   * @param {IPosition} position
+   */
+  public setTimeLine(position: IPosition) {
     let jack = position.position / position.duration * 100
     if (this.playerTimeLine) this.playerTimeLine.style.width = jack + '%'
 
     const remaining = this.formatDuration(
       position.duration - position.position + 1
     )
-    if (this.skipCountDown)
-      this.skipCountDown.innerText = `${remaining} ${CONFIG.REMAINING_TEXT}`
+    if (this.skipCountDown) {
+      this.skipCountDown.innerHTML = remaining + ' ' + CONFIG.REMAINING_TEXT
+    }
   }
 
+  /**
+   * @func getSkipElement
+   * @desc generate and set skip count down element
+   * @returns {HTMLElement}
+   */
   private getSkipElement(): HTMLElement {
     let skipElement = document.createElement('span')
     this.skipCountDown = skipElement
     return this.skipCountDown
   }
 
+  /**
+   * @func getTimeLineElement
+   * @desc generate and set time line element
+   * @returns {HTMLElement}
+   */
   private getTimeLineElement(): HTMLElement {
     let playerTimeLine = document.createElement('div')
     playerTimeLine.style.height = '4px'
@@ -136,18 +258,23 @@ export default class Controller {
     return playerTimeLine
   }
 
+  /**
+   * @func getPauseButton
+   * @desc generate pause button element
+   * @returns {HTMLElement}
+   */
   private getPauseButton(): HTMLElement {
     let pauseBtn = document.createElement('div')
-    pauseBtn.innerHTML = `<svg width="15px" height="16px" viewBox="0 0 15 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">\n +
-          <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->\n +
-          <title>pause</title>\n +
-          <desc>Created with Sketch.</desc>\n +
-          <defs></defs>\n +
-          <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">\n +
-              <g id="Artboard" transform="translate(-33.000000, -33.000000)" fill-rule="nonzero" fill="#FAFAFA">\n +
-                  <path d="M33,33 L39,33 L39,49 L33,49 L33,33 Z M41.3266667,33 L47.3266667,33 L47.3266667,49 L41.3266667,49 L41.3266667,33 Z" id="pause"></path>\n +
-              </g>\n +
-          </g>\n +
+    pauseBtn.innerHTML = `<svg width="15px" height="16px" viewBox="0 0 15 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+          <title>pause</title>
+          <desc>Created with Sketch.</desc>
+          <defs></defs> +
+          <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <g id="Artboard" transform="translate(-33.000000, -33.000000)" fill-rule="nonzero" fill="#FAFAFA">
+                  <path d="M33,33 L39,33 L39,49 L33,49 L33,33 Z M41.3266667,33 L47.3266667,33 L47.3266667,49 L41.3266667,49 L41.3266667,33 Z" id="pause"></path>
+              </g> 
+          </g> 
       </svg>`
     pauseBtn.style.fontSize = this.isMobile ? '13px' : '13px'
     pauseBtn.style.padding = this.isMobile ? '3px 5px' : '3px 5px'
@@ -164,24 +291,30 @@ export default class Controller {
     pauseBtn.style.marginRight = '0px'
     pauseBtn.style.boxShadow = '0px'
     pauseBtn.onclick = e => {
+      e.stopPropagation()
       this.player.pause()
     }
 
     return pauseBtn
   }
 
+  /**
+   * @func getFullScreenButton
+   * @desc generate full screen button element
+   * @returns {HTMLElement}
+   */
   private getFullScreenButton(): HTMLElement {
     let fullScreenBtn = document.createElement('div')
-    fullScreenBtn.innerHTML = `<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">\n +
-          <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->\n +
-          <title>fullscreen</title>\n +
-          <desc>Created with Sketch.</desc>\n +
-          <defs></defs>\n +
-          <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">\n +
-              <g id="Artboard" transform="translate(-33.000000, -265.000000)" fill-rule="nonzero" fill="#FAFAFA">\n +
-                  <path d="M33,275.666667 L38.3333333,275.666667 L38.3333333,281 L33,281 L33,275.666667 Z M49,265 L49,281 L41,281 L41,278.333333 L46.3333333,278.333333 L46.3333333,267.666667 L35.6666667,267.666667 L35.6666667,273 L33,273 L33,265 L49,265 Z" id="fullscreen"></path>\n +
-              </g>\n +
-          </g>\n +
+    fullScreenBtn.innerHTML = `<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+          <title>fullscreen</title>
+          <desc>Created with Sketch.</desc>
+          <defs></defs>
+          <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <g id="Artboard" transform="translate(-33.000000, -265.000000)" fill-rule="nonzero" fill="#FAFAFA">
+                  <path d="M33,275.666667 L38.3333333,275.666667 L38.3333333,281 L33,281 L33,275.666667 Z M49,265 L49,281 L41,281 L41,278.333333 L46.3333333,278.333333 L46.3333333,267.666667 L35.6666667,267.666667 L35.6666667,273 L33,273 L33,265 L49,265 Z" id="fullscreen"></path>
+              </g>
+          </g>
       </svg>`
     fullScreenBtn.style.fontSize = this.isMobile ? '13px' : '13px'
     fullScreenBtn.style.padding = this.isMobile ? '3px 5px' : '3px 5px'
@@ -198,16 +331,22 @@ export default class Controller {
     fullScreenBtn.style.marginRight = '0px'
     fullScreenBtn.style.boxShadow = '0px'
 
-    fullScreenBtn.onclick = () => {
+    fullScreenBtn.onclick = e => {
+      e.stopPropagation()
       this.player.setFullscreen(!this.player.getFullscreen())
     }
 
     return fullScreenBtn
   }
 
+  /**
+   * @func getProviderClick
+   * @desc generate provider anchor element
+   * @returns {HTMLElement}
+   */
   private getProviderClick(): HTMLElement {
     let providerLink = document.createElement('div')
-    providerLink.innerHTML = `<a style="position: relative; top: 2px" target="_blank" href="${
+    providerLink.innerHTML = `<a style="position: relative; top: 2px; text-decoration: none" target="_blank" href="${
       CONFIG.PROVIDE_LINK
     }" alt="${CONFIG.PROVIDE_NAME}">
       <svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -234,8 +373,9 @@ export default class Controller {
     providerLink.style.marginRight = '0px'
     providerLink.style.boxShadow = '0px'
     providerLink.style.backgroundColor = 'rgba(0, 0, 0, 0.7)'
-    providerLink.onclick = () => {
-      if (this.player.getState() == 'playing') {
+    providerLink.onclick = e => {
+      e.stopPropagation()
+      if (this.player.getState() === 'playing') {
         this.player.pause()
       }
     }
@@ -275,7 +415,8 @@ export default class Controller {
     adLink.style.marginRight = '0px'
     adLink.style.boxShadow = '0px'
 
-    adLink.onclick = () => {
+    adLink.onclick = e => {
+      e.stopPropagation()
       if (this.onOpenAdClick) this.onOpenAdClick()
     }
 
@@ -283,7 +424,7 @@ export default class Controller {
   }
 
   private getSkipAd(): HTMLElement {
-    var skipBtn = document.createElement('div')
+    let skipBtn = document.createElement('div')
 
     skipBtn.style.fontSize = this.isMobile ? '13px' : '13px'
     skipBtn.style.padding = this.isMobile
@@ -306,7 +447,8 @@ export default class Controller {
     skipBtn.style.border = '1px solid rgba(255,255,255, 0.20)'
     skipBtn.innerText = CONFIG.SKIP_TEXT
 
-    skipBtn.onclick = () => {
+    skipBtn.onclick = e => {
+      e.preventDefault()
       console.debug('skip ad.')
       if (this.onSkip) this.onSkip()
     }
@@ -314,6 +456,11 @@ export default class Controller {
     return skipBtn
   }
 
+  /**
+   * @func getTimeLineWrapper
+   * @desc generate time line wrapper
+   * @returns {HTMLElement}
+   */
   private getTimeLineWrapper(): HTMLElement {
     let timeLineWrapper = document.createElement('div')
     timeLineWrapper.style.width = '96%'
@@ -328,25 +475,58 @@ export default class Controller {
     return timeLineWrapper
   }
 
-  private formatDuration(number: number): string {
-    let sec_num = parseInt(number.toString(), 10).toString()
-    let hours = Math.floor(parseInt(sec_num) / 3600).toString()
+  /**
+   * @func getShadow
+   * @desc generate shadow element
+   * @returns {HTMLElement}
+   */
+  private getShadow(): HTMLElement {
+    let shadowOverlay = document.createElement('div')
+    shadowOverlay.setAttribute('class', 'shadowOverlay')
+    shadowOverlay.style.position = 'absolute'
+    shadowOverlay.style.left = '0'
+    shadowOverlay.style.width = '100%'
+    shadowOverlay.style.height = '15%'
+    shadowOverlay.style.bottom = '0'
+    shadowOverlay.style.zIndex = '999998'
+    shadowOverlay.style.backgroundImage =
+      '-moz-linear-gradient(-90deg, rgba(0,0,0,0.00) 0%, #000000 100%)'
+    shadowOverlay.style.backgroundImage =
+      '-webkit-linear-gradient(-90deg, rgba(0,0,0,0.00) 0%, #000000 100%)'
+    shadowOverlay.style.backgroundImage =
+      '-ms-linear-gradient(-90deg, rgba(0,0,0,0.00) 0%, #000000 100%)'
+    shadowOverlay.style.backgroundImage =
+      '-o-linear-gradient(-90deg, rgba(0,0,0,0.00) 0%, #000000 100%)'
+    shadowOverlay.style.backgroundImage =
+      'linear-gradient(-90deg, rgba(0,0,0,0.00) 0%, #000000 100%)'
+    return shadowOverlay
+  }
+
+  /**
+   * @func formatDuration
+   * @desc mask seconds number to time format
+   * @param {number} input
+   * @returns {string}
+   */
+  private formatDuration(input: number): string {
+    let secHum = parseInt(input.toString(), 10).toString()
+    let hours = Math.floor(parseInt(secHum, 10) / 3600).toString()
     let minutes = Math.floor(
-      (parseInt(sec_num) - parseInt(hours) * 3600) / 60
+      (parseInt(secHum, 10) - parseInt(hours, 10) * 3600) / 60
     ).toString()
     let seconds = (
-      parseInt(sec_num) -
-      parseInt(hours) * 3600 -
-      parseInt(minutes) * 60
+      parseInt(secHum, 10) -
+      parseInt(hours, 10) * 3600 -
+      parseInt(minutes, 10) * 60
     ).toString()
 
-    if (parseInt(hours) < 10) {
+    if (parseInt(hours, 10) < 10) {
       hours = '0' + hours
     }
-    if (parseInt(minutes) < 10) {
+    if (parseInt(minutes, 10) < 10) {
       minutes = '0' + minutes
     }
-    if (parseInt(seconds) < 10) {
+    if (parseInt(seconds, 10) < 10) {
       seconds = '0' + seconds
     }
     return minutes + ':' + seconds

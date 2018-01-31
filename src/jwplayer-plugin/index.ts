@@ -3,22 +3,21 @@
 import JwPlayerPlugin from './plugin'
 
 console.debug('Init JwPlayer Vast Plugin.')
-
 ;(function(jwplayer: JWPlayerStatic) {
   const Plugin = function(player: any, config: any, div: HTMLElement) {
     const conf = player.getConfig()
     const plugin = new JwPlayerPlugin(jwplayer, conf.advertising, player, div)
 
     player.onReady(() => {
-      plugin.setup()
+      // plugin.setup();
     })
 
     player.onPlay(() => {
-      plugin.showStartLinerAd()
+      plugin.showStartLinearAd()
     })
 
     player.onPlaylistItem(() => {
-      // plugin.setup();
+      plugin.setup()
     })
   }
 

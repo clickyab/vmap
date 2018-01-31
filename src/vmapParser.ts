@@ -60,7 +60,7 @@ export class VMAPParser {
    * @returns {string}
    */
   private getVersion(VMAP: any): string {
-    return VMAP._attributes.version
+    return VMAP._attributes ? VMAP._attributes.version : null
   }
 
   /**
@@ -70,17 +70,23 @@ export class VMAPParser {
    */
   private getBreaks(AdBreak: any): IAdBreak {
     return {
-      breakTypes: [AdBreak._attributes.breakType],
-      breakId: AdBreak._attributes.breakId,
-      timeOffset: AdBreak._attributes.timeOffset,
+      breakTypes: [AdBreak._attributes ? AdBreak._attributes.breakType : null],
+      breakId: AdBreak._attributes ? AdBreak._attributes.breakId : null,
+      timeOffset: AdBreak._attributes ? AdBreak._attributes.timeOffset : null,
       adSource: {
-        id: AdBreak.AdSource._attributes.id,
+        id: AdBreak.AdSource._attributes
+          ? AdBreak.AdSource._attributes.id
+          : null,
         VASTAdData: this.parseVASTAdDataAds(AdBreak.AdSource.VASTAdData.VAST),
         adDataType: AdBreak.AdSource.adDataType,
         adTagURI: AdBreak.AdSource.adTagURL,
         allowMultipleAds: AdBreak.AdSource.allowMultipleAds,
-        dataType: AdBreak.AdSource._attributes.dataType,
-        followRedirects: AdBreak.AdSource._attributes.followRedirects,
+        dataType: AdBreak.AdSource._attributes
+          ? AdBreak.AdSource._attributes.dataType
+          : null,
+        followRedirects: AdBreak.AdSource._attributes
+          ? AdBreak.AdSource._attributes.followRedirects
+          : null,
         customAdData: AdBreak.AdSource.customAdData
       },
       extensions: AdBreak.Extensions
@@ -97,7 +103,7 @@ export class VMAPParser {
    */
   private parseVASTAdDataAds(vast: any): IVAST3 {
     return {
-      version: vast._attributes.version,
+      version: vast._attributes ? vast._attributes.version : null,
       ads: this.parseAd(vast.Ad)
     }
   }
@@ -108,11 +114,14 @@ export class VMAPParser {
    * @returns {Ad[]}
    */
   private parseAd(ad: any): Ad[] {
+    console.log(ad.InLine)
     // if (ad["InLine"]) {
     let liner: IInlineAd = {
       id: ad._attributes.id,
       adSystem: {
-        version: ad.InLine.AdSystem._attributes.version,
+        version: ad.InLine.AdSystem._attributes
+          ? ad.InLine.AdSystem._attributes.version
+          : null,
         name: ad.InLine.AdSystem._cdata
       },
       adTitle: ad.InLine.AdTitle._cdata,
@@ -135,8 +144,8 @@ export class VMAPParser {
           : null
       },
       survey: ad.InLine.Survey._text || ad.InLine.Survey._cdata,
-      impressions: ad.InLine.Imperssions
-        ? this.parseImpression(ad.InLine.Imperssions.Imperssion)
+      impressions: ad.InLine.Impression
+        ? this.parseImpression(ad.InLine.Impression)
         : []
     }
     return [liner]
@@ -190,18 +199,20 @@ export class VMAPParser {
     let mediaFilesOutputArray: IMediaFile[] = []
     mediaFilesArray.forEach((file: any) => {
       const f: IMediaFile = {
-        id: file._attributes.id,
-        height: file._attributes.height,
-        width: file._attributes.width,
-        delivery: file._attributes.delivery,
-        codec: file._attributes.codec,
-        mimetype: file._attributes.type,
-        apiFramework: file._attributes.apiFramework,
-        bitrate: file._attributes.bitrate,
-        minBitrate: file._attributes.minBitrate,
-        maxBitrate: file._attributes.maxBitrate,
-        scalable: file._attributes.scalable,
-        maintainAspectRatio: file._attributes.maintainAspectRatio,
+        id: file._attributes ? file._attributes.id : null,
+        height: file._attributes ? file._attributes.height : null,
+        width: file._attributes ? file._attributes.width : null,
+        delivery: file._attributes ? file._attributes.delivery : null,
+        codec: file._attributes ? file._attributes.codec : null,
+        mimetype: file._attributes ? file._attributes.type : null,
+        apiFramework: file._attributes ? file._attributes.apiFramework : null,
+        bitrate: file._attributes ? file._attributes.bitrate : null,
+        minBitrate: file._attributes ? file._attributes.minBitrate : null,
+        maxBitrate: file._attributes ? file._attributes.maxBitrate : null,
+        scalable: file._attributes ? file._attributes.scalable : null,
+        maintainAspectRatio: file._attributes
+          ? file._attributes.maintainAspectRatio
+          : null,
         uri: file._cdata
       }
       mediaFilesOutputArray.push(f)
@@ -225,7 +236,7 @@ export class VMAPParser {
     trackingInputArray.forEach((tracking: any) => {
       const f: ITrackingEvent = {
         uri: tracking._cdata,
-        event: tracking._attributes.event
+        event: tracking._attributes ? tracking._attributes.event : null
       }
       trackingOutputArray.push(f)
     })
@@ -246,7 +257,9 @@ export class VMAPParser {
     if (videoClickInput.ClickThrough) {
       f.clickThrough = {
         uri: videoClickInput.ClickThrough._cdata,
-        id: videoClickInput.ClickThrough._attributes.id
+        id: videoClickInput.ClickThrough._attributes
+          ? videoClickInput.ClickThrough._attributes.id
+          : null
       }
     }
 
@@ -260,7 +273,7 @@ export class VMAPParser {
         if (f.clickTrackings)
           f.clickTrackings.push({
             uri: c._cdata,
-            id: c._attributes.id
+            id: c._attributes ? c._attributes.id : null
           })
       })
     }
@@ -275,7 +288,7 @@ export class VMAPParser {
         if (f.customClicks)
           f.customClicks.push({
             uri: c._cdata,
-            id: c._attributes.id
+            id: c._attributes ? c._attributes.id : null
           })
       })
     }
@@ -312,6 +325,7 @@ export class VMAPParser {
    * @returns {IAdImpression[]}
    */
   private parseImpression(impressionInput: any): IAdImpression[] {
+    console.log(impressionInput._cdata)
     let impressionInputArray = impressionInput
     if (!Array.isArray(impressionInput)) {
       impressionInputArray = [impressionInput]

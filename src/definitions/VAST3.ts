@@ -135,7 +135,7 @@ export interface ICreative {
   // Data to be passed into the video ad.
   adParameters?: IAdParameters
   // Event tracking.
-  trackings?: ITrackingEvent[]
+  trackings: ITrackingEvent[]
   // Click on video trackings.
   videoClicks: IVideoClick
   // Mediafiles of the creative.

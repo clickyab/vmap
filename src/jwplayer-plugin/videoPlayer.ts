@@ -1,3 +1,6 @@
+/**
+ * Control JwPlayer video player to show video ad
+ */
 export default class VideoPlayer {
   jwplayer: JWPlayerStatic
   player: any
@@ -5,6 +8,13 @@ export default class VideoPlayer {
   src: string
   lastSrc: string
 
+  /**
+   * @constructor
+   * @param {JWPlayerStatic} jwplayer
+   * @param player
+   * @param {HTMLElement} div
+   * @param {string} src
+   */
   constructor(
     jwplayer: JWPlayerStatic,
     player: any,
@@ -18,6 +28,10 @@ export default class VideoPlayer {
     this.src = src
   }
 
+  /**
+   * @func play
+   * @desc change source of the video element and play ad
+   */
   public play() {
     console.debug('play ad video player.')
 
@@ -34,25 +48,30 @@ export default class VideoPlayer {
     }, 1)
   }
 
-  public pause() {
-    console.debug('pause ad video player.')
-    this.player.pause()
-  }
-
+  /**
+   * @func skip
+   * @desc skip ad
+   * @param {boolean} replay
+   */
   public skip(replay: boolean) {
     console.debug('skip ad video player.', this.lastSrc)
     let video = this.getVideoElement()
-
     video.setAttribute('src', this.lastSrc)
     this.player.setControls(true)
 
     if (replay) {
       video.pause()
-      video.currentTime = 0.1
-      video.play()
+      setTimeout(() => {
+        video.currentTime = 0.1
+        video.play()
+      }, 10)
     }
   }
 
+  /**
+   * @func getVideoElement
+   * @desc get video element
+   */
   private getVideoElement() {
     let videoContainer = this.player.getContainer()
     return videoContainer.getElementsByTagName('video')[0]
