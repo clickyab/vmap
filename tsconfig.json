@@ -12,6 +12,7 @@
     "strict": true,
     "sourceMap": true,
     "declaration": true,
+    "strictPropertyInitialization": false,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

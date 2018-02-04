@@ -8,9 +8,9 @@
  */
 export interface IVAST3 {
   // Ads.
-  ads: Ad[]
+  ads: Ad[];
   // Version.
-  version: string
+  version: string;
 }
 
 /**
@@ -18,22 +18,22 @@ export interface IVAST3 {
  */
 export interface IBaseAd {
   // Ad type.
-  adType: AdType
+  adType: AdType;
   // Indicates source ad server.
-  adSystem: IAdSystem
+  adSystem: IAdSystem;
   // Impression trackers.
-  impressions: IAdImpression[]
+  impressions: IAdImpression[];
   // Contains all creative elements within an InLine or Wrapper Ad.
-  creative: ICreative[]
+  creative: ICreative[];
 
   // Ad identifier.
-  id?: string
+  id?: string;
   // Identifies the sequence of multiple Ads and defines an Ad Pod.
-  sequence?: number
+  sequence?: number;
   // Uri to request if ad does not play due to error.
-  error?: string
+  error?: string;
   // Ad extensions.
-  extensions?: Object[]
+  extensions?: Object[];
 }
 
 /**
@@ -41,18 +41,18 @@ export interface IBaseAd {
  */
 export interface IInlineAd extends IBaseAd {
   // Ad type.
-  adType: AdType.inline
+  adType: AdType.inline;
   // Common name of ad.
-  adTitle: string
+  adTitle: string;
 
   // Longer description of ad.
-  description?: string
+  description?: string;
   // Common name of advertiser.
-  advertiser?: string
+  advertiser?: string;
   // Ad pricing.
-  pricing?: IAdPricing
+  pricing?: IAdPricing;
   // Uri of request to survey vendor.
-  survey?: string
+  survey?: string;
 }
 
 /**
@@ -60,19 +60,19 @@ export interface IInlineAd extends IBaseAd {
  */
 export interface IWrappedAd extends IBaseAd {
   // Ad type.
-  adType: AdType.wrapper
+  adType: AdType.wrapper;
   // Uri of ad tag of downstream Secondary Ad Server.
-  VASTAdTagURI: string
+  VASTAdTagURI: string;
 }
 
-export type Ad = IInlineAd | IWrappedAd
+export type Ad = IInlineAd | IWrappedAd;
 
 /**
  * Ad types.
  */
 export enum AdType {
-  inline = 'inline',
-  wrapper = 'wrapper'
+  inline = "inline",
+  wrapper = "wrapper"
 }
 
 /**
@@ -102,13 +102,13 @@ export interface IAdPricing {
  */
 export enum AdPricingModel {
   // Cost per click.
-  cpc = 'cpc',
+  cpc = "cpc",
   // Cost per mille.
-  cpm = 'cpm',
+  cpm = "cpm",
   // Cost per engagement.
-  cpe = 'cpe',
+  cpe = "cpe",
   // Cost per view.
-  cpv = 'cpv'
+  cpv = "cpv"
 }
 
 /**
@@ -187,25 +187,25 @@ export interface ITrackingEvent {
  * Tracking event types.
  */
 export enum TrackingEventType {
-  creativeView = 'creativeView',
-  start = 'start',
-  firstQuartile = 'firstQuartile',
-  midpoint = 'midpoint',
-  thirdQuartile = 'thirdQuartile',
-  complete = 'complete',
-  mute = 'mute',
-  unmute = 'unmute',
-  pause = 'pause',
-  rewind = 'rewind',
-  resume = 'resume',
-  fullscreen = 'fullscreen',
-  exitFullscreen = 'exitFullscreen',
-  expand = 'expand',
-  collapse = 'collapse',
-  acceptInvitation = 'acceptInvitation',
-  close = 'close',
-  skip = 'skip',
-  progress = 'progress'
+  creativeView = "creativeView",
+  start = "start",
+  firstQuartile = "firstQuartile",
+  midpoint = "midpoint",
+  thirdQuartile = "thirdQuartile",
+  complete = "complete",
+  mute = "mute",
+  unmute = "unmute",
+  pause = "pause",
+  rewind = "rewind",
+  resume = "resume",
+  fullscreen = "fullscreen",
+  exitFullscreen = "exitFullscreen",
+  expand = "expand",
+  collapse = "collapse",
+  acceptInvitation = "acceptInvitation",
+  close = "close",
+  skip = "skip",
+  progress = "progress"
 }
 
 /**
@@ -213,23 +213,23 @@ export enum TrackingEventType {
  */
 export interface IVideoClick {
   // Uri to open as destination page when user clicks on the video.
-  clickThrough: IClickTracking
+  clickThrough: IClickTracking;
   // Uris to request for tracking purposes when user clicks on the video.
-  clickTrackings: IClickTracking[]
+  clickTrackings: IClickTracking[];
   // Uris to request on custom events such as hotspotted video.
-  customClicks?: IClickTracking[]
+  customClicks?: IClickTracking[];
 }
 
 /**
  * Click tracking uri.
  */
 export interface IClickTracking {
-  [key: string]: string
+  [key: string]: string;
 
   // Uri to request on click.
-  uri: string
+  uri: string;
   // Optional id for this uri.
-  id: string
+  id: string;
 }
 
 /**
@@ -237,10 +237,10 @@ export interface IClickTracking {
  */
 
 export enum mimetype {
-  'IMAGE_GIF' = 'image/gif',
-  'IMAGE_PNG' = 'image/png',
-  'IMAGE_JPEG' = 'image/jpeg',
-  'VIDEO_MP4' = 'video/mp4'
+  "IMAGE_GIF" = "image/gif",
+  "IMAGE_PNG" = "image/png",
+  "IMAGE_JPEG" = "image/jpeg",
+  "VIDEO_MP4" = "video/mp4"
 }
 
 /**
@@ -248,41 +248,41 @@ export enum mimetype {
  */
 export interface IMediaFile {
   // Location of linear file.
-  uri: string
+  uri: string;
   // Method of delivery of ad.
-  delivery: DeliveryType
+  delivery: DeliveryType;
   // MIME type. Popular MIME types include, but are not limited to
   // “video/x-ms-wmv” for Windows Media, and “video/x-flv” for Flash Video.
   // Image ads or interactive ads can be included in the MediaFiles section with
   // appropriate Mime.
-  mimetype: mimetype
+  mimetype: mimetype;
   // Pixel dimensions of video.
-  width: number
+  width: number;
   // Pixel dimensions of video.
-  height: number
+  height: number;
 
   // Optional identifier.
-  id?: string
+  id?: string;
   // Bitrate of encoded video in Kbps. If bitrate is supplied, minBitrate and
   // maxBitrate should not be supplied.
-  bitrate?: number
+  bitrate?: number;
   // Minimum bitrate of an adaptive stream in Kbps. If minBitrate is supplied,
   // maxBitrate must be supplied and bitrate should not be supplied.
-  minBitrate?: number
+  minBitrate?: number;
   // Maximum bitrate of an adaptive stream in Kbps. If maxBitrate is supplied,
   // minBitrate must be supplied and bitrate should not be supplied.
-  maxBitrate?: number
+  maxBitrate?: number;
   // Whether it is acceptable to scale the image.
-  scalable?: boolean
+  scalable?: boolean;
   // Whether the ad must have its aspect ratio maintained when scales.
-  maintainAspectRatio?: boolean
+  maintainAspectRatio?: boolean;
   // The apiFramework defines the method to use for communication if the MediaFile
   // is interactive. Suggested values for this element are “VPAID”, “FlashVars”
   // (for Flash/Flex), “initParams” (for Silverlight) and “GetVariables”.
   // (variables placed in key/value pairs on the asset request).
-  apiFramework?: string
+  apiFramework?: string;
   // The codec used to produce the media file.
-  codec?: string
+  codec?: string;
 }
 
 /**

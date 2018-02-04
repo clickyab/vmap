@@ -10,9 +10,9 @@ import { IVAST3 } from './VAST3'
  */
 export interface IVMAP {
   // VMAP version.
-  version: string
+  version: string;
   // AdBreak list.
-  breaks: IAdBreak[]
+  breaks: IAdBreak[];
 }
 
 /**
@@ -27,39 +27,39 @@ export interface IAdBreak {
   // (3)“start” or “end”,
   // (4) #m (m is an integer & 0 and represents the position of the ad break
   //     opportunity)
-  timeOffset: Date | number | 'start' | 'end'
+  timeOffset: Date | number | "start" | "end";
   // The types of ads allowed by the ad break: "linear", "nonlinear" or "display"
-  breakTypes: AdBreakType[]
+  breakTypes: AdBreakType[];
   // AdBreak's ad source.
-  adSource: IAdSource
+  adSource: IAdSource;
   // AdBreak's optional events to track.
-  trackings?: ITrackingEvent[]
+  trackings?: ITrackingEvent[];
   // AdBreak optional extensions.
-  extensions?: IExtension[]
+  extensions?: IExtension[];
   // Optional identifier for the ad break;
-  breakId?: string
+  breakId?: string;
   // Optional indicator that instructs the video player to repeat the same AdBreak
   // and AdSource at time offsets equal to the duration value of this attribute.
   // Expresssed in time format HH.MM.SS[.mmm].
-  repeatAfter?: string
+  repeatAfter?: string;
 }
 
 /**
  * AdBreak types.
  */
 export enum AdBreakType {
-  linear = 'linear',
-  nonlinear = 'nonlinear',
-  display = 'display'
+  linear = "linear",
+  nonlinear = "nonlinear",
+  display = "display"
 }
 
 /**
  * AdBreak events types.
  */
 export enum TrackingEvent {
-  breakStart = 'breakStart',
-  breakEnd = 'breakEnd',
-  error = 'error'
+  breakStart = "breakStart",
+  breakEnd = "breakEnd",
+  error = "error"
 }
 
 /**
@@ -67,9 +67,9 @@ export enum TrackingEvent {
  */
 export interface ITrackingEvent {
   // URI to request for specified event type.
-  uri: string
+  uri: string;
   // The VMAP ad break level event to track.
-  level: TrackingEvent
+  level: TrackingEvent;
 }
 
 /**
@@ -77,9 +77,9 @@ export interface ITrackingEvent {
  */
 export interface IExtension {
   // Extension type (generally an uri).
-  extensionType: string
+  extensionType: string;
   // The extension values.
-  value: string | Object
+  value: string | Object;
 }
 
 /**
@@ -87,54 +87,54 @@ export interface IExtension {
  */
 export interface IAdSource {
   // The AdSource data type.
-  dataType: AdSourceTypes
+  dataType: AdSourceTypes;
   // A VAST 3.0 document that comprises the ad response document.
   // Not contained within a CDATA. (There were are a couple of places where
   // the VMAP 1.0 pdf incorrectly references both VASTData and VASTAdData but
   // VASTAdData is the correct element per VMAP 1.0.1).
-  VASTAdData: IVAST3
+  VASTAdData: IVAST3;
   // An ad response document (included inline) that is not VAST 3.0.
-  customAdData?: string | Object
+  customAdData?: string | Object;
   // Uri to a secondary ad server that will provide the ad response.
   // Uri must be contained within a CDATA block.
-  adTagURI?: string
+  adTagURI?: string;
   // AdData type (required for CustomAdData and AdTagURI, undefined for VASTAdData).
-  adDataType?: customAdSourceTypes | adTagURITypes
+  adDataType?: customAdSourceTypes | adTagURITypes;
   // Identifier for the ad source.
-  id?: string
+  id?: string;
   // Indicates whether the player should select and play only a single ad from
   // the ad response document, or play multiple ads.
   // If not specified, video player accepts playing multiple ads in an ad break.
-  allowMultipleAds?: boolean
+  allowMultipleAds?: boolean;
   // Whether the player should follow wrappers/redirects in the ad response
   // document. If not specified, left to the video player’s discretion.
-  followRedirects?: boolean
+  followRedirects?: boolean;
 }
 
 /**
  * AdSource types.
  */
 export enum AdSourceTypes {
-  VAST3 = 'vast3',
-  custom = 'custom',
-  adTagURI = 'adTagURL'
+  VAST3 = "vast3",
+  custom = "custom",
+  adTagURI = "adTagURL"
 }
 
 /**
  * CustomAdSource types.
  */
 export enum customAdSourceTypes {
-  vast1 = 'vast1',
-  vast2 = 'vast2',
-  proprietary = 'proprietary'
+  vast1 = "vast1",
+  vast2 = "vast2",
+  proprietary = "proprietary"
 }
 
 /**
  * AdTagURI types.
  */
 export enum adTagURITypes {
-  vast1 = 'vast1',
-  vast2 = 'vast2',
-  vast3 = 'vast3',
-  proprietary = 'proprietary'
+  vast1 = "vast1",
+  vast2 = "vast2",
+  vast3 = "vast3",
+  proprietary = "proprietary"
 }
