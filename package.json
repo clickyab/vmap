@@ -22,7 +22,7 @@
   "scripts": {
     "lint": "tslint -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "prebuild": "rimraf dist",
-    "build": "tsc && rollup -c rollup.config.ts && rimraf compiled",
+    "build": "tsc && rollup -c rollup.config.ts",
     "start": "tsc -w & rollup -c rollup.config.ts -w",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -96,11 +96,11 @@
     "semantic-release": "^8.0.0",
     "ts-jest": "^21.0.0",
     "ts-node": "^3.0.6",
-    "tslint": "^5.4.3",
+    "tslint": "^5.9.1",
     "tslint-config-prettier": "^1.1.0",
     "tslint-config-standard": "^7.0.0",
     "typedoc": "^0.9.0",
-    "typescript": "^2.3.4",
+    "typescript": "^2.7.1",
     "validate-commit-msg": "^2.12.2"
   },
   "dependencies": {
@@ -109,6 +109,7 @@
     "ntypescript": "1.201706190042.1",
     "rollup-plugin-uglify": "^2.0.1",
     "uglify-es": "^3.3.0",
+    "video.js": "^6.6.3",
     "xml-js": "^1.6.2"
   }
 }

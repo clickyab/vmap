@@ -14,6 +14,7 @@ export default class ImagePlayer {
         console.log("Play image ad", this.div);
         this.imageWrapper = this.getImageWrapperElement();
         this.div.appendChild(this.imageWrapper);
+        console.log(333333);
     }
 
     public stop() {

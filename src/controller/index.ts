@@ -4,13 +4,9 @@
  */
 
 import CONFIG from "./../config";
-import { IPosition } from "../jwplayer-plugin/plugin";
+import {IPosition} from "../jwplayer-plugin/plugin";
 
 export default class Controller {
-    /**
-     * JwPlayer Instance
-     */
-    private jwplayer: JWPlayerStatic;
 
     /**
      * Player reference
@@ -40,12 +36,12 @@ export default class Controller {
     /**
      * Element of count down
      */
-    private skipCountDown?: HTMLElement ;
+    private skipCountDown?: HTMLElement;
 
     /**
      * Element of player time line
      */
-    private playerTimeLine?: HTMLElement ;
+    private playerTimeLine?: HTMLElement;
 
     /**
      * on click on ad link event
@@ -87,7 +83,6 @@ export default class Controller {
 
     /**
      * @constructor
-     * @param {JWPlayerStatic} jwplayer
      * @param player
      * @param {HTMLElement} div
      * @param {string} title
@@ -95,17 +90,13 @@ export default class Controller {
      * @param {number} skipAfter
      * @param {boolean} linkWrapper
      */
-    constructor(
-        jwplayer: JWPlayerStatic,
-        player: any,
-        div: HTMLElement,
-        title: string,
-        src: string,
-        skipAfter: number,
-        linkWrapper: boolean = false
-    ) {
+    constructor(player: any,
+                div: HTMLElement,
+                title: string,
+                src: string,
+                skipAfter: number,
+                linkWrapper: boolean = false) {
         console.debug("Create controller overlay instance.");
-        this.jwplayer = jwplayer;
         this.div = div;
         this.player = player;
         this.title = title;
@@ -120,7 +111,7 @@ export default class Controller {
      */
     public show() {
         console.debug("Show controller overlay.");
-        this.setTimeLine({ position: 0, duration: 0, type: "start" });
+        this.setTimeLine({position: 0, duration: 0, type: "start"});
         this.overlay = this.getWrapperElement();
         this.div.appendChild(this.overlay);
     }
@@ -178,7 +169,16 @@ export default class Controller {
         }
 
         wrapper.onclick = () => {
-            if (this.player.getState() === "playing") {
+
+            let status: boolean = false;
+            if (typeof this.player.getState === "function" && this.player.getState() === "playing") {
+                status = true;
+            }
+
+            if (typeof this.player.played === "function" && this.player.played()) {
+                status = true;
+            }
+            if (status) {
                 this.player.pause();
             } else {
                 this.player.play();

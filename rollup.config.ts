@@ -50,5 +50,28 @@ export default [
       resolve(),
       uglify({}, minify)
     ],
+  },
+
+  // build VideoJs Plugin
+  {
+    input: `compiled/videojs-plugin/index.js`,
+    output: [
+      {file: `dist/videojs/vmap.js`, format: 'umd'},
+    ],
+    sourcemap: true,
+    // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
+    external: [],
+    watch: {
+      include: 'compiled/videojs-plugin/**',
+    },
+    plugins: [
+      // Allow bundling cjs modules (unlike webpack, rollup doesn't understand cjs)
+      commonjs(),
+      // Allow node_modules resolution, so you can use 'external' to control
+      // which external modules to include in the bundle
+      // https://github.com/rollup/rollup-plugin-node-resolve#usage
+      resolve(),
+      uglify({}, minify)
+    ],
   }
 ]

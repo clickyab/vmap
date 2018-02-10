@@ -3,8 +3,8 @@
  * This plugin load VMAP xml and parse it with internal VMAP parser and show linear ads.
  * This plugin can show gif, png, jpeg and mp4 ads.
  */
+/// <reference path="../../types/videojs.d.ts"/>
 
-/// <reference path="../../types/jwplayer.d.ts"/>
 import VMAPParser from "./../vmapParser";
 import {AdBreakType, IAdBreak, IVMAP} from "../definitions/VMAP" ;
 import {Ad, ITrackingEvent, mimetype} from "../definitions/VAST3";
@@ -22,26 +22,21 @@ export interface IPosition {
     type: string;
 }
 
-export default class JwPlayerPlugin {
+export default class VideoJsPlugin {
     /**
-     * JwPlayer Instance
+     * VideoJs Player Instance
      */
-    private jwPlayerIns: JWPlayerStatic;
+    private player: Player;
 
     /**
      * plugin config
      */
-    private config: any;
+    private config: VideojsPluginOption;
 
     /**
      * VMAP object
      */
     private VMAP: IVMAP;
-
-    /**
-     * Player reference
-     */
-    private player: any;
 
     /**
      * Plugin's div element that provide by JwPlayer
@@ -68,6 +63,11 @@ export default class JwPlayerPlugin {
      */
     private adIsShowing: boolean = false;
 
+    /**  /**
+     * Show ad status flag
+     */
+    private timerLock: number = 0;
+
     /**
      * Current adBreak that is showing
      */
@@ -83,19 +83,20 @@ export default class JwPlayerPlugin {
      */
     private callImpressionViewApiLock: boolean;
 
+    private mainVideoEnded = false;
+
     /**
      * @constructor
-     * @param {JWPlayerStatic} jwplayer
+     * @param {JWPlayerStatic} videoJsPlayer
      * @param {Object} config
      * @param player
      * @param {HTMLElement} div
      */
-    constructor(jwplayer: JWPlayerStatic, config: object, player: any, div: HTMLElement) {
+    constructor(videoJsPlayer: Player, config: VideojsPluginOption, div: HTMLElement) {
         console.debug("Init JwPlayer Vast Plugin Class.");
 
-        this.jwPlayerIns = jwplayer;
+        this.player = videoJsPlayer;
         this.config = config;
-        this.player = player;
         this.div = div;
     }
 
@@ -109,9 +110,17 @@ export default class JwPlayerPlugin {
         this.loadVMAP().then(vmap => {
             this.VMAP = vmap;
             console.debug("VMAP object is loaded", vmap);
-            this.player.onTime(this.timeController.bind(this));
-            this.player.onComplete(() => {
-                this.onVideoEnd(false);
+
+            this.player.on("timeupdate", () => {
+                this.timeController()
+            });
+
+            this.player.on('play', () => {
+                if (this.mainVideoEnded && this.currentAdBreak && this.currentAdBreak.timeOffset === "end") {
+                    this.mainVideoEnded = false;
+                    this.adIsShowing = false;
+                    this.showStartLinearAd();
+                }
             });
         });
     }
@@ -119,10 +128,25 @@ export default class JwPlayerPlugin {
     /**
      * @func timeController
      * @des get position of player timer and call necessary functions
-     * @param {IPosition} position
      */
-    private timeController(position: IPosition) {
-        this.overlayController.setTimeLine(position);
+    private timeController() {
+        const position: IPosition = {
+            position: this.player.currentTime(),
+            duration: this.player.duration(),
+            type: "time"
+        };
+
+        if (this.timerLock === position.position - position.duration) {
+            return;
+        }
+        this.timerLock = position.position - position.duration;
+
+
+        if (position.position - position.duration === 0) {
+            this.onVideoEnd(false);
+        } else {
+            if (this.overlayController) this.overlayController.setTimeLine(position);
+        }
     }
 
     /**
@@ -133,8 +157,8 @@ export default class JwPlayerPlugin {
      *       If the ad's state is playing, the ad player (image or video) had to stop and the main video had to play
      * @param skipped
      */
-    private onVideoEnd(skipped?: any) {
-        this.overlayController.remove();
+    private onVideoEnd(skipped?: boolean) {
+        if (this.overlayController) this.overlayController.remove();
         if (this.adIsShowing) {
             if (!skipped) {
                 this.callCompleteViewApi();
@@ -149,9 +173,11 @@ export default class JwPlayerPlugin {
                     this.videoPlayer.skip(true);
                     this.videoPlayer = null;
                 } else if (!!this.imagePlayer) {
-                    this.player.play();
                     this.imagePlayer.stop();
                     this.imagePlayer = null;
+                    setTimeout(() => {
+                        this.player.play();
+                    }, 100);
                 }
             } else if (this.currentAdBreak.timeOffset === "end") {
                 if (!!this.videoPlayer) {
@@ -163,7 +189,9 @@ export default class JwPlayerPlugin {
                 }
             }
         } else if (skipped === false) {
-            this.showEndLinerAd();
+            setTimeout(() => {
+                this.showEndLinerAd();
+            }, 100);
         }
     }
 
@@ -243,7 +271,7 @@ export default class JwPlayerPlugin {
         if (this.adIsShowing) return;
         this.adIsShowing = true;
 
-        if (this.player.getPosition() >= 0.1) return;
+        if (this.player.currentTime() >= 0.1) return;
 
         this.VMAP.breaks.forEach(adBreak => {
             if (
@@ -262,7 +290,12 @@ export default class JwPlayerPlugin {
      * @desc show linear ad. this method check ad is not playing and check vmap object for end type of ad
      */
     private showEndLinerAd() {
+        console.debug("show end liner ad");
         let skipShowAd = false;
+
+        setTimeout(() => {
+            this.mainVideoEnded = true;
+        }, 1000);
 
         if (this.adIsShowing) return;
         this.adIsShowing = true;
@@ -285,7 +318,8 @@ export default class JwPlayerPlugin {
      * @param {string} url
      * @returns {Promise<IVMAP>}
      */
-    private loadVMAP(url: string = this.config.tag): Promise<IVMAP> {
+    private loadVMAP(url: string = this.config.requestUrl): Promise<IVMAP> {
+
         console.debug(`Try to load JwPlayer VMAP from ${url}`);
 
         return new Promise((resolve, reject) => {
@@ -298,7 +332,7 @@ export default class JwPlayerPlugin {
                 }
             };
 
-            xhr.onerror = error => {
+            xhr.onerror = () => {
                 reject();
                 throw new Error(`Failed to load JwPlayer VMAP from ${url}`);
             };
@@ -353,6 +387,7 @@ export default class JwPlayerPlugin {
      * @param {IAdBreak} adBreak
      */
     private showImagePlayer(ad: Ad, adBreak: IAdBreak) {
+        console.debug("show image player", ad, adBreak);
         let clickThroughUri = ad.creative[0].videoClicks.clickThrough.uri;
         let domainEx = adBreak.extensions
             ? adBreak.extensions.findIndex(e => e.extensionType === "domain")
@@ -367,8 +402,6 @@ export default class JwPlayerPlugin {
             ad.creative[0].mediaFiles[0].uri,
             {}
         );
-        this.imagePlayer.play();
-        this.player.stop();
 
         this.overlayController = new Controller(
             this.player,
@@ -383,11 +416,14 @@ export default class JwPlayerPlugin {
             true
         );
 
+        this.imagePlayer.play();
+        this.player.pause();
+
         let timer = 0;
         let interval = setInterval(() => {
             timer++;
             if (timer - 7 > 0) {
-                // if (this.imagePlayer) this.imagePlayer.stop();
+                if (this.imagePlayer) this.imagePlayer.stop();
                 this.onVideoEnd(false);
                 if (timer) clearInterval(interval);
                 return;
@@ -397,10 +433,11 @@ export default class JwPlayerPlugin {
                 position: timer,
                 type: "time"
             });
+
         }, 1000);
 
         this.overlayController.setOnSkip(() => {
-            // if (this.imagePlayer) this.imagePlayer.stop();
+            if (this.imagePlayer) this.imagePlayer.stop();
             this.onVideoEnd(true);
             this.overlayController.remove();
             if (timer) clearInterval(interval);
@@ -428,7 +465,6 @@ export default class JwPlayerPlugin {
             : -1;
 
         this.videoPlayer = new VideoPlayer(
-            this.jwPlayerIns,
             this.player,
             this.div,
             ad.creative[0].mediaFiles[0].uri
@@ -453,6 +489,7 @@ export default class JwPlayerPlugin {
 
         this.videoPlayer.play();
         this.overlayController.show();
+
         this.callImpressionAdi();
     }
 }
