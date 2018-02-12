@@ -1,16 +1,16 @@
 /**
- * JwPlayer VMAP plugin
+ * VideoJs VMAP plugin
  * This plugin load VMAP xml and parse it with internal VMAP parser and show linear ads.
  * This plugin can show gif, png, jpeg and mp4 ads.
  */
 /// <reference path="../../types/videojs.d.ts"/>
 
-import VMAPParser from "./../vmapParser";
+import VMAPParser from "../parser/index";
 import {AdBreakType, IAdBreak, IVMAP} from "../definitions/VMAP" ;
 import {Ad, ITrackingEvent, mimetype} from "../definitions/VAST3";
-import ImagePlayer from "../image-player/index";
+import ImagePlayer from "../lib/image-player/index";
 import VideoPlayer from "./videoPlayer";
-import Controller from "../controller/index";
+import Controller from "../lib/controller/index";
 
 /**
  * @interface IPosition
@@ -39,7 +39,7 @@ export default class VideoJsPlugin {
     private VMAP: IVMAP;
 
     /**
-     * Plugin's div element that provide by JwPlayer
+     * Plugin's div element that provide by VideoJs
      */
     private div: HTMLElement;
 
@@ -87,13 +87,13 @@ export default class VideoJsPlugin {
 
     /**
      * @constructor
-     * @param {JWPlayerStatic} videoJsPlayer
+     * @param {VideoJsStatic} videoJsPlayer
      * @param {Object} config
      * @param player
      * @param {HTMLElement} div
      */
     constructor(videoJsPlayer: Player, config: VideojsPluginOption, div: HTMLElement) {
-        console.debug("Init JwPlayer Vast Plugin Class.");
+        console.debug("Init VideoJs Vast Plugin Class.");
 
         this.player = videoJsPlayer;
         this.config = config;
@@ -105,7 +105,7 @@ export default class VideoJsPlugin {
      * @desc setup plugin by load VMAP object and set player events
      */
     public setup() {
-        console.debug("Setting JwPlayer Vast Plugin up.");
+        console.debug("Setting VideoJs Vast Plugin up.");
 
         this.loadVMAP().then(vmap => {
             this.VMAP = vmap;
@@ -320,7 +320,7 @@ export default class VideoJsPlugin {
      */
     private loadVMAP(url: string = this.config.requestUrl): Promise<IVMAP> {
 
-        console.debug(`Try to load JwPlayer VMAP from ${url}`);
+        console.debug(`Try to load VideoJs VMAP from ${url}`);
 
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
@@ -334,7 +334,7 @@ export default class VideoJsPlugin {
 
             xhr.onerror = () => {
                 reject();
-                throw new Error(`Failed to load JwPlayer VMAP from ${url}`);
+                throw new Error(`Failed to load VideoJs VMAP from ${url}`);
             };
 
             xhr.open("GET", url);
@@ -418,18 +418,19 @@ export default class VideoJsPlugin {
 
         this.imagePlayer.play();
         this.player.pause();
+        const duration : number = parseInt(ad.creative[0].duration.replace(new RegExp(":", "g"), ""), 10);
 
         let timer = 0;
         let interval = setInterval(() => {
             timer++;
-            if (timer - 7 > 0) {
+            if (timer - duration > 0) {
                 if (this.imagePlayer) this.imagePlayer.stop();
                 this.onVideoEnd(false);
                 if (timer) clearInterval(interval);
                 return;
             }
             this.overlayController.setTimeLine({
-                duration: 7,
+                duration: duration,
                 position: timer,
                 type: "time"
             });

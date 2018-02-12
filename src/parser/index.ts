@@ -2,7 +2,7 @@
  * Parse VMAP document to Json
  */
 import xmlConvert from "xml-js";
-import { IAdBreak, IExtension, IVMAP } from "./definitions/VMAP";
+import { IAdBreak, IExtension, IVMAP } from "../definitions/VMAP";
 import {
     Ad,
     AdType,
@@ -14,7 +14,7 @@ import {
     ITrackingEvent,
     IVAST3,
     IVideoClick
-} from "./definitions/VAST3";
+} from "../definitions/VAST3";
 
 /**
  * main class for parse VMAP xml

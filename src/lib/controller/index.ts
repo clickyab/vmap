@@ -3,8 +3,8 @@
  * This class show video and image controller and buttons on front of the player
  */
 
-import CONFIG from "./../config";
-import {IPosition} from "../jwplayer-plugin/plugin";
+import CONFIG from "../../config";
+import {IPosition} from "../../jwplayer-plugin/plugin";
 
 export default class Controller {
 

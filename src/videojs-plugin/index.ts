@@ -2,6 +2,9 @@
 import VideoJsPluginComponent from "./plugin";
 
 function VideoJsPlugin(this: Player, option: VideojsPluginOption) {
+
+    if (!videojs) return;
+
     let player = this;
     const childElement = document.createElement("div");
     const div: HTMLElement = document.getElementById(player.id()) || document.createElement("div");
@@ -22,5 +25,7 @@ function VideoJsPlugin(this: Player, option: VideojsPluginOption) {
         }
     });
 }
-
-videojs.plugin("vmap", VideoJsPlugin);
+if (!module || !module.exports) {
+    videojs.plugin("vmap", VideoJsPlugin);
+}
+export default VideoJsPlugin;

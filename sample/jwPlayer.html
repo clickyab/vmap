@@ -2,70 +2,65 @@
 
 <html lang="fa">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
-  <title>تبلیغات درون ویدیویی vast برای jwplayer</title>
-  <script type="text/javascript" src="./assets/jwplayer.js"></script>
-  <script>jwplayer.key = "4tT8PWTvD3tjwhUR9uRySxZUcvX+IzN1W4qF7SxAu24="</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <title>تبلیغات درون ویدیویی vast برای jwplayer</title>
+    <script type="text/javascript" src="./assets/jwplayer.js"></script>
+    <script>jwplayer.key = "4tT8PWTvD3tjwhUR9uRySxZUcvX+IzN1W4qF7SxAu24="</script>
 
 
 </head>
 <body>
 <div class="video-section full">
-  <div class="header-section-title center black">
-    <h1>Sample JwPlayer VMAP</h1>
-  </div>
-  <div id="video" class="center mt">Loading...</div>
+    <div class="header-section-title center black">
+        <h1>Sample JwPlayer VMAP</h1>
+    </div>
+    <div id="video" class="center mt">Loading...</div>
 
 </div>
 
 <script type="text/javascript">
 
-  var playerInstance = jwplayer("video");
-  playerInstance.setup({
-    width: "100%",
-    height: "100%",
-    aspectratio: "16:9",
-    stretching: 'uniform',
-    preload: 'none',
-    autostart: false,
-    playlist: [{
-      sources: [
-        {
-          file: './videos/big_buck_bunny.mp4',
-          label: '360',
-          type: "video/mp4"
-        }
-      ],
-      title: "Sample Video",
-      description: "",
-      image: "./videos/cover.jpg"
-    }],
+    var playerInstance = jwplayer("video");
+    playerInstance.setup({
+        width: "100%",
+        height: "100%",
+        aspectratio: "16:9",
+        stretching: 'uniform',
+        preload: 'none',
+        autostart: false,
+        playlist: [{
+            sources: [
+                {
+                    file: './videos/big_buck_bunny.mp4',
+                    label: '360',
+                    type: "video/mp4"
+                }
+            ],
+            title: "Sample Video",
+            description: "",
+            image: "./videos/cover.jpg"
+        }],
 
-    plugins: {
-      "./../dist/jwplayer/vmap.js": {}
-    },
+        plugins: {
+            "./../dist/jwplayer/vmap.js": {}
+        },
 
-    skin: {
-      url: "/skin.css",
-      name: "skin"
-    },
+        advertising: {
+            client: "vmap",
+            tag: "/sample/vmap.xml"
+        },
 
-    advertising: {
-      client: "vmap",
-      tag: "/sample/vmap.xml"
-    },
+        primary: "html5",
+        startparam: "start",
 
-    primary: "html5",
-    startparam: "start",
+        analytics: {
+            enabled: false
+        },
 
-    analytics: {
-      enabled: false
-    },
-
-    repeat: false,
-    mute : true,
-  });
+        repeat: false,
+        mute: true,
+    });
 
 
 </script>

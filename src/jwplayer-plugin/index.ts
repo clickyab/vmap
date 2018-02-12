@@ -2,9 +2,12 @@
 
 import JwPlayerPlugin from "./plugin";
 
-console.debug("Init JwPlayer Vast Plugin.");
-(function(jwplayer: JWPlayerStatic) {
-    const Plugin = function(player: any, config: any, div: HTMLElement) {
+function JwPlayerPluginFn() {
+    console.debug("Init JwPlayer Vast Plugin.");
+
+    if (!jwplayer) return;
+
+    const Plugin = function (player: any, config: any, div: HTMLElement) {
         const conf = player.getConfig();
         const plugin = new JwPlayerPlugin(jwplayer, conf.advertising, player, div);
 
@@ -25,4 +28,11 @@ console.debug("Init JwPlayer Vast Plugin.");
     const pluginName = "vmap";
 
     jwplayer("").registerPlugin(pluginName, minPlayerVersion, Plugin);
-})(jwplayer);
+}
+
+if (!module || !module.exports) {
+    JwPlayerPluginFn();
+}
+
+export default JwPlayerPluginFn;
+

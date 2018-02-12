@@ -5,12 +5,12 @@
  */
 
 /// <reference path="../../types/jwplayer.d.ts"/>
-import VMAPParser from "./../vmapParser";
+import VMAPParser from "../parser/index";
 import {AdBreakType, IAdBreak, IVMAP} from "../definitions/VMAP" ;
 import {Ad, ITrackingEvent, mimetype} from "../definitions/VAST3";
-import ImagePlayer from "../image-player/index";
+import ImagePlayer from "../lib/image-player/index";
 import VideoPlayer from "./videoPlayer";
-import Controller from "../controller/index";
+import Controller from "../lib/controller/index";
 
 /**
  * @interface IPosition
@@ -383,17 +383,18 @@ export default class JwPlayerPlugin {
             true
         );
 
+        const duration : number = parseInt(ad.creative[0].duration.replace(new RegExp(":", "g"), ""), 10);
         let timer = 0;
         let interval = setInterval(() => {
             timer++;
-            if (timer - 7 > 0) {
+            if (timer - duration > 0) {
                 // if (this.imagePlayer) this.imagePlayer.stop();
                 this.onVideoEnd(false);
                 if (timer) clearInterval(interval);
                 return;
             }
             this.overlayController.setTimeLine({
-                duration: 7,
+                duration: duration,
                 position: timer,
                 type: "time"
             });
