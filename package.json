@@ -1,4 +1,5 @@
 {
+    "private": true,
     "name": "vmap-kit",
     "version": "1.0.0",
     "description": "VMAP Parser, JwPlayer and VideoJs plugin.",
