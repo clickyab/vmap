@@ -22,7 +22,7 @@ export default class VideoJsPlugin {
      */
     private VMAP;
     /**
-     * Plugin's div element that provide by JwPlayer
+     * Plugin's div element that provide by VideoJs
      */
     private div;
     /**
@@ -60,7 +60,7 @@ export default class VideoJsPlugin {
     private mainVideoEnded;
     /**
      * @constructor
-     * @param {JWPlayerStatic} videoJsPlayer
+     * @param {VideoJsStatic} videoJsPlayer
      * @param {Object} config
      * @param player
      * @param {HTMLElement} div

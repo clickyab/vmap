@@ -30,9 +30,7 @@ function JwPlayerPluginFn() {
     jwplayer("").registerPlugin(pluginName, minPlayerVersion, Plugin);
 }
 
-if (!module || !module.exports) {
-    JwPlayerPluginFn();
-}
+JwPlayerPluginFn();
 
 export default JwPlayerPluginFn;
 

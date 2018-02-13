@@ -25,7 +25,7 @@ function VideoJsPlugin(this: Player, option: VideojsPluginOption) {
         }
     });
 }
-if (!module || !module.exports) {
-    videojs.plugin("vmap", VideoJsPlugin);
-}
+
+if (videojs) videojs.plugin("vmap", VideoJsPlugin);
+
 export default VideoJsPlugin;
