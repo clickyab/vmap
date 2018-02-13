@@ -11,6 +11,7 @@ import {Ad, ITrackingEvent, mimetype} from "../definitions/VAST3";
 import ImagePlayer from "../lib/image-player/index";
 import VideoPlayer from "./videoPlayer";
 import Controller from "../lib/controller/index";
+import FP from "fingerprintjs2";
 
 /**
  * @interface IPosition
@@ -289,22 +290,24 @@ export default class JwPlayerPlugin {
         console.debug(`Try to load JwPlayer VMAP from ${url}`);
 
         return new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function () {
-                if (this.readyState === 4 && this.status === 200) {
-                    let VMAP = VMAPParser.JSON(xhr.responseText);
-                    console.debug(`VMAP loaded:`, VMAP);
-                    resolve(VMAP);
-                }
-            };
+            new FP().get((r: string) => {
+                const xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function () {
+                    if (this.readyState === 4 && this.status === 200) {
+                        let VMAP = VMAPParser.JSON(xhr.responseText);
+                        console.debug(`VMAP loaded:`, VMAP);
+                        resolve(VMAP);
+                    }
+                };
 
-            xhr.onerror = error => {
-                reject();
-                throw new Error(`Failed to load JwPlayer VMAP from ${url}`);
-            };
+                xhr.onerror = () => {
+                    reject();
+                    throw new Error(`Failed to load VideoJs VMAP from ${url}`);
+                };
 
-            xhr.open("GET", url);
-            xhr.send();
+                xhr.open("GET", `${url}?tid=${r}` );
+                xhr.send();
+            });
         });
     }
 
