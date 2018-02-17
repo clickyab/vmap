@@ -1,7 +1,7 @@
 {
     "private": false,
     "name": "vmap-kit",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "VMAP Parser, JwPlayer and VideoJs plugin.",
     "keywords": [
         "vmap",

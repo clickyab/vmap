@@ -51,6 +51,8 @@ Currently these plugins support these types of MediaFile's mimetype:
 
 and also can play ads this `start` and `end` time offset.
 
+**Warning: from 1.0.3 version, the plugin name change from `vmap` to `vast`.**
+
 ### JwPlayer VMAP Plugin
 
 To show ad in JwPlayer you need put this config in your JwPlayer config:
@@ -63,7 +65,7 @@ playerInstance.setup({
     },
 
     advertising: {
-        client: "vmap",
+        client: "vast",
         tag: "/sample/vmap.xml" // VMAP endpoint address
     }
     ....
@@ -82,7 +84,7 @@ To show ad in VideoJs you need load the plugin script:
 and then config the VideoJs to show ad in its options:
 ```javascript
 plugins: {
-        vmap: {
+        vast: {
             requestUrl: '/sample/vmap.xml',
         }
     }

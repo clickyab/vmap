@@ -25,7 +25,7 @@ function JwPlayerPluginFn() {
     };
 
     const minPlayerVersion = "6.0";
-    const pluginName = "vmap";
+    const pluginName = "vast";
 
     jwplayer("").registerPlugin(pluginName, minPlayerVersion, Plugin);
 }

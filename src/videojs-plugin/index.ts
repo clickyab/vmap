@@ -26,6 +26,6 @@ function VideoJsPlugin(this: Player, option: VideojsPluginOption) {
     });
 }
 
-if (videojs) videojs.plugin("vmap", VideoJsPlugin);
+if (videojs) videojs.plugin("vast", VideoJsPlugin);
 
 export default VideoJsPlugin;
