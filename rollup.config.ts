@@ -57,7 +57,7 @@ export default [
     {
         input: `compiled/jwplayer-plugin/index.js`,
         output: [
-            {file: `dist/jwplayer/vmap.js`, format: 'umd', name: "jwplayer-plugin"},
+            {file: `dist/jwplayer/vast.js`, format: 'umd', name: "jwplayer-plugin"},
             {file: `dist/jwplayer/index.js`, format: 'es'},
         ],
         sourcemap: true,

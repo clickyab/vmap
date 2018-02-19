@@ -339,7 +339,7 @@ export default class VideoJsPlugin {
                     throw new Error(`Failed to load VideoJs VMAP from ${url}`);
                 };
 
-                xhr.open("GET", `${url}?tid=${r}` );
+                xhr.open("GET", `${url}?tid=${r}&p=${window.location.href}&r=${document.referrer}` );
                 xhr.send();
             });
         });

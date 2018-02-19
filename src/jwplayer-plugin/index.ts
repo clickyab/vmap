@@ -22,6 +22,7 @@ function JwPlayerPluginFn() {
         player.onPlaylistItem(() => {
             plugin.setup();
         });
+        console.debug("Init JwPlayer Vast Plugin.");
     };
 
     const minPlayerVersion = "6.0";
