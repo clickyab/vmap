@@ -81,7 +81,7 @@ export default [
     {
         input: `compiled/videojs-plugin/index.js`,
         output: [
-            {file: `dist/videojs/vmap.js`, format: 'umd', name: "videoJs-plugin"},
+            {file: `dist/videojs/vast.js`, format: 'umd', name: "videoJs-plugin"},
             {file: `dist/videojs/index.js`, format: 'es'},
         ],
         sourcemap: true,

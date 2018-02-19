@@ -51,7 +51,8 @@ Currently these plugins support these types of MediaFile's mimetype:
 
 and also can play ads this `start` and `end` time offset.
 
-This plugins append `location.href` as `p`, `document.referrer' as `r` and a fingerprint as `tid` to the request of vmap. 
+This plugins append `location.href` as `p`, `document.referrer` as `r` and a fingerprint as `tid` to the request of vmap.
+ 
 **Warning: from 1.0.3 version, the plugin name change from `vmap` to `vast`.**
 
 ### JwPlayer VMAP Plugin
@@ -97,5 +98,5 @@ plugins: {
  * Tests
  * Support other time offsets
  
- ## License
+ ### License
  The license of this package is [MIT License](LICENSE.txt) and is being developed in [ClickYab](http://clickyab.com).  
