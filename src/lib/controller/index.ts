@@ -64,6 +64,11 @@ export default class Controller {
     private overlay?: HTMLElement;
 
     /**
+     * Show controller Btn element
+     */
+    private showControllerBtn: boolean = true;
+
+    /**
      * define the user's browser is mobile or not
      */
     private isMobile = window.navigator.userAgent.match(
@@ -153,6 +158,10 @@ export default class Controller {
         this.onOpenAdClick = fn;
     }
 
+    public setShowControllerBtn(status: boolean) {
+        this.showControllerBtn = status;
+    }
+
     /**
      * @func getWrapperElement
      * @desc generate and set wrapper element of controller
@@ -200,8 +209,8 @@ export default class Controller {
         wrapper.style.right = "0px";
 
         wrapper.appendChild(this.getAdLink(this.title));
-        wrapper.appendChild(this.getFullScreenButton());
-        wrapper.appendChild(this.getPauseButton());
+        if (this.showControllerBtn) wrapper.appendChild(this.getPauseButton());
+        if (this.showControllerBtn) wrapper.appendChild(this.getFullScreenButton());
         wrapper.appendChild(this.getProviderClick());
         wrapper.appendChild(this.getTimeLineWrapper());
         wrapper.appendChild(this.getShadow());

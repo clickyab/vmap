@@ -45,6 +45,10 @@ export default class Controller {
      */
     private overlay?;
     /**
+     * Show controller Btn element
+     */
+    private showControllerBtn;
+    /**
      * define the user's browser is mobile or not
      */
     private isMobile;
@@ -95,6 +99,7 @@ export default class Controller {
      * @param {() => void} fn
      */
     setOnAdClick(fn: () => void): void;
+    setShowControllerBtn(status: boolean): void;
     /**
      * @func getWrapperElement
      * @desc generate and set wrapper element of controller

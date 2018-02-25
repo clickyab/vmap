@@ -418,6 +418,7 @@ export default class VideoJsPlugin {
                 : 1000,
             true
         );
+        this.overlayController.setShowControllerBtn(false);
 
         this.imagePlayer.play();
         this.player.pause();
@@ -485,7 +486,7 @@ export default class VideoJsPlugin {
                 ? parseInt(adBreak.extensions[skipAfter].value.toString(), 10)
                 : 1000,
         );
-
+        this.overlayController.setShowControllerBtn(true);
         this.overlayController.setOnSkip(() => {
             this.onVideoEnd(true);
             this.overlayController.remove();

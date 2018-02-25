@@ -385,7 +385,7 @@ export default class JwPlayerPlugin {
                 : 1000,
             true
         );
-
+        this.overlayController.setShowControllerBtn(false);
         const duration : number = parseInt(ad.creative[0].duration.replace(new RegExp(":", "g"), ""), 10);
         let timer = 0;
         let interval = setInterval(() => {
@@ -449,7 +449,7 @@ export default class JwPlayerPlugin {
                 ? parseInt(adBreak.extensions[skipAfter].value.toString(), 10)
                 : 1000,
         );
-
+        this.overlayController.setShowControllerBtn(true);
         this.overlayController.setOnSkip(() => {
             this.onVideoEnd(true);
             this.overlayController.remove();
