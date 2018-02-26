@@ -4,12 +4,13 @@ import { IVMAP } from "../definitions/VMAP";
  */
 export declare class VMAPParser {
     private xml?;
+    private debugMode;
     /**
      * @constructor
      * Set initial value
      * @param {string} xml
      */
-    constructor(xml?: string);
+    constructor(xml?: string, debugMode?: boolean);
     /**
      * Parse input xml string to IVMAP Object
      * @param {string} xml

@@ -62,6 +62,11 @@ export default class Controller {
      */
     private linkWrapper;
     /**
+     * Link all controller area to ad's link or not
+     * @type {boolean}
+     */
+    private debugMode;
+    /**
      * @constructor
      * @param player
      * @param {HTMLElement} div
@@ -70,7 +75,7 @@ export default class Controller {
      * @param {number} skipAfter
      * @param {boolean} linkWrapper
      */
-    constructor(player: any, div: HTMLElement, title: string, src: string, skipAfter: number, linkWrapper?: boolean);
+    constructor(player: any, div: HTMLElement, title: string, src: string, skipAfter: number, linkWrapper?: boolean, debugMode?: boolean);
     /**
      * @func show
      * @desc show controller over the player.

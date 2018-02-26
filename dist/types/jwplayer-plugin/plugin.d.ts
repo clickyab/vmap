@@ -64,7 +64,7 @@ export default class JwPlayerPlugin {
      * @param player
      * @param {HTMLElement} div
      */
-    constructor(jwplayer: JWPlayerStatic, config: object, player: any, div: HTMLElement);
+    constructor(jwplayer: JWPlayerStatic, config: any, player: any, div: HTMLElement);
     /**
      * @func setup
      * @desc setup plugin by load VMAP object and set player events
