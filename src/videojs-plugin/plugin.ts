@@ -94,7 +94,6 @@ export default class VideoJsPlugin {
      * @param {HTMLElement} div
      */
     constructor(videoJsPlayer: Player, config: VideojsPluginOption, div: HTMLElement) {
-        console.log(config);
         if (config.debug) console.debug("Init VideoJs Vast Plugin Class.");
 
         this.player = videoJsPlayer;
@@ -254,9 +253,10 @@ export default class VideoJsPlugin {
         if (!impression) return;
 
         if (this.config.debug) console.debug("Call impression api with url: ", impression.uri);
-        const xhr = new XMLHttpRequest();
-        xhr.open("get", impression.uri);
-        xhr.send();
+        let imgDom = document.createElement("img");
+        imgDom.src = impression.uri;
+        imgDom.style.display = "none";
+        this.div.appendChild(imgDom);
     }
 
     /**
