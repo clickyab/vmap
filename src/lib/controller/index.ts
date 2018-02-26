@@ -108,7 +108,6 @@ export default class Controller {
                 skipAfter: number,
                 linkWrapper: boolean = false,
                 debugMode: boolean = false) {
-
         if (debugMode) console.debug("Create controller overlay instance.");
         this.div = div;
         this.player = player;
@@ -186,23 +185,26 @@ export default class Controller {
         } else {
             wrapper = document.createElement("div");
         }
+        console.log(this.linkWrapper);
+        if (!this.linkWrapper) {
+            wrapper.onclick = () => {
+                let status: boolean = false;
+                if (typeof this.player.getState === "function" && this.player.getState() === "playing") {
+                    status = true;
+                }
 
-        wrapper.onclick = () => {
+                if (typeof this.player.played === "function" && this.player.played()) {
+                    status = true;
+                }
 
-            let status: boolean = false;
-            if (typeof this.player.getState === "function" && this.player.getState() === "playing") {
-                status = true;
+                if (status) {
+                    this.player.pause();
+                } else {
+                    this.player.play();
+                }
             }
+        }
 
-            if (typeof this.player.played === "function" && this.player.played()) {
-                status = true;
-            }
-            if (status) {
-                this.player.pause();
-            } else {
-                this.player.  play();
-            }
-        };
 
         this.div.style.position = "absolute";
         this.div.style.top = "0px";
@@ -393,9 +395,9 @@ export default class Controller {
         providerLink.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
         providerLink.onclick = e => {
             e.stopPropagation();
-            if (this.player.getState() === "playing") {
+            // if (this.player.getState() === "playing") {
                 this.player.pause();
-            }
+            // }
         };
 
         return providerLink;
@@ -463,7 +465,7 @@ export default class Controller {
         skipBtn.style.marginRight = "0px";
         skipBtn.style.marginRight = "0px";
         skipBtn.style.border = "1px solid rgba(255,255,255, 0.20)";
-        skipBtn.innerText = CONFIG.SKIP_TEXT;
+        skipBtn.innerHTML = "<svg style=\"position: relative; left: 5px; top: 4px\" width=\"16\" height=\"16\" viewBox=\"0 0 32 32\" xmlns=\"http://www.w3.org/2000/svg\"><polygon fill=\"#fff\" points=\"2,2 28,16 2,30\"></polygon><rect fill=\"#fff\" height=\"28\" width=\"4\" x=\"26\" y=\"2\"></rect></svg>" + CONFIG.SKIP_TEXT;
 
         skipBtn.onclick = e => {
             e.preventDefault();
