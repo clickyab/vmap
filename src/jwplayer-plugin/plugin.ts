@@ -286,7 +286,7 @@ export default class JwPlayerPlugin {
      * @param {string} url
      * @returns {Promise<IVMAP>}
      */
-    private loadVMAP(url: string = this.config.tag): Promise<IVMAP> {
+    private loadVMAP(url: string = this.config.schedule): Promise<IVMAP> {
         console.debug(`Try to load JwPlayer VMAP from ${url}`);
 
         return new Promise((resolve, reject) => {

@@ -68,7 +68,7 @@ playerInstance.setup({
 
     advertising: {
         client: "vast",
-        tag: "/sample/vmap.xml" // VMAP endpoint address
+        schedule: "/sample/vmap.xml" // VMAP endpoint address
     }
     ....
 });

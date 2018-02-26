@@ -2,7 +2,7 @@
  * Parse VMAP document to Json
  */
 import xmlConvert from "xml-js";
-import { IAdBreak, IExtension, IVMAP } from "../definitions/VMAP";
+import {IAdBreak, IExtension, IVMAP} from "../definitions/VMAP";
 import {
     Ad,
     AdType,
@@ -38,7 +38,7 @@ export class VMAPParser {
      */
     public JSON(xml?: string): IVMAP {
         if (!xml && !this.xml) {
-            throw "XML input is required.";
+            throw (new Error("XML input is required."));
         }
 
         const xmlString: string = xml || this.xml as string;
@@ -252,7 +252,7 @@ export class VMAPParser {
     private parseVideoClicks(videoClickInput: any): IVideoClick {
         const f: IVideoClick = {
             clickTrackings: [],
-            clickThrough: { uri: "", id: "" }
+            clickThrough: {uri: "", id: ""}
         };
         if (videoClickInput.ClickThrough) {
             f.clickThrough = {
