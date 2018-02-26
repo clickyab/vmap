@@ -7,6 +7,7 @@ export default class VideoPlayer {
     div: HTMLElement;
     src: string;
     lastSrc: string = "";
+    debugMode: boolean = false;
 
     /**
      * @constructor
@@ -15,17 +16,17 @@ export default class VideoPlayer {
      * @param {HTMLElement} div
      * @param {string} src
      */
-    constructor(
-        jwplayer: JWPlayerStatic,
-        player: any,
-        div: HTMLElement,
-        src: string
-    ) {
-        console.debug("create new instance of video player.");
+    constructor(jwplayer: JWPlayerStatic,
+                player: any,
+                div: HTMLElement,
+                src: string,
+                debugMode:boolean = false) {
+        if (this.debugMode) console.debug("create new instance of video player.");
         this.jwplayer = jwplayer;
         this.div = div;
         this.player = player;
         this.src = src;
+        this.debugMode = debugMode;
     }
 
     /**
@@ -33,7 +34,7 @@ export default class VideoPlayer {
      * @desc change source of the video element and play ad
      */
     public play() {
-        console.debug("play ad video player.");
+        if (this.debugMode) console.debug("play ad video player.");
 
         this.player.setControls(false);
         let video = this.getVideoElement();
@@ -43,7 +44,7 @@ export default class VideoPlayer {
         setTimeout(() => {
             video.setAttribute("src", this.src);
             video.pause();
-            console.log(video.getAttribute("src"), { video });
+            if (this.debugMode) console.log(video.getAttribute("src"), {video});
             video.play();
         }, 1);
     }
@@ -54,7 +55,7 @@ export default class VideoPlayer {
      * @param {boolean} replay
      */
     public skip(replay: boolean) {
-        console.debug("skip ad video player.", this.lastSrc);
+        if (this.debugMode) console.debug("skip ad video player.", this.lastSrc);
         let video = this.getVideoElement();
         video.setAttribute("src", this.lastSrc);
         this.player.setControls(true);

@@ -95,6 +95,7 @@ interface Player {
 
 interface VideojsPluginOption {
     requestUrl: string;
+    debug?: boolean;
 }
 
 

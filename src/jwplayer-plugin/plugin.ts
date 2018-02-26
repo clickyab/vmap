@@ -3,10 +3,9 @@
  * This plugin load VMAP xml and parse it with internal VMAP parser and show linear ads.
  * This plugin can show gif, png, jpeg and mp4 ads.
  */
-
 /// <reference path="../../types/jwplayer.d.ts"/>
-import VMAPParser from "../parser/index";
-import {AdBreakType, IAdBreak, IVMAP} from "../definitions/VMAP" ;
+import {VMAPParser} from "../parser/index";
+import {AdBreakType, IAdBreak, IVMAP} from "../definitions/VMAP";
 import {Ad, ITrackingEvent, mimetype} from "../definitions/VAST3";
 import ImagePlayer from "../lib/image-player/index";
 import VideoPlayer from "./videoPlayer";
@@ -91,8 +90,8 @@ export default class JwPlayerPlugin {
      * @param player
      * @param {HTMLElement} div
      */
-    constructor(jwplayer: JWPlayerStatic, config: object, player: any, div: HTMLElement) {
-        console.debug("Init JwPlayer Vast Plugin Class.");
+    constructor(jwplayer: JWPlayerStatic, config: any, player: any, div: HTMLElement) {
+        if (config.debug) console.debug("Init JwPlayer Vast Plugin Class.");
 
         this.jwPlayerIns = jwplayer;
         this.config = config;
@@ -105,11 +104,11 @@ export default class JwPlayerPlugin {
      * @desc setup plugin by load VMAP object and set player events
      */
     public setup() {
-        console.debug("Setting JwPlayer Vast Plugin up.");
+        if (this.config.debug) console.debug("Setting JwPlayer Vast Plugin up.");
 
         this.loadVMAP().then(vmap => {
             this.VMAP = vmap;
-            console.debug("VMAP object is loaded", vmap);
+            if (this.config.debug) console.debug("VMAP object is loaded", vmap);
             this.player.onTime(this.timeController.bind(this));
             this.player.onComplete(() => {
                 this.onVideoEnd(false);
@@ -174,7 +173,7 @@ export default class JwPlayerPlugin {
      *       the api call will be lock for 2 seconds
      */
     private callCompleteViewApi() {
-        console.debug("Call complete view api");
+        if (this.config.debug) console.debug("Call complete view api");
 
         if (this.callCompleteViewApiLock) {
             return;
@@ -197,10 +196,7 @@ export default class JwPlayerPlugin {
             return;
         }
 
-        console.debug(
-            "Call complete view api with url: ",
-            creative.trackings[completeTrackingIndex].uri
-        );
+        if (this.config.debug) console.debug("Call complete view api with url: ",creative.trackings[completeTrackingIndex].uri);
         const xhr = new XMLHttpRequest();
         xhr.open("get", creative.trackings[completeTrackingIndex].uri);
         xhr.send();
@@ -212,7 +208,7 @@ export default class JwPlayerPlugin {
      *       the api call will be lock for 2 seconds
      */
     private callImpressionAdi() {
-        console.debug("Call impression api");
+        if (this.config.debug) console.debug("Call impression api");
 
         if (this.callImpressionViewApiLock) {
             return;
@@ -227,7 +223,7 @@ export default class JwPlayerPlugin {
         const impression = ad.impressions[0];
         if (!impression) return;
 
-        console.debug("Call impression api with url: ", impression.uri);
+        if (this.config.debug) console.debug("Call impression api with url: ", impression.uri);
         const xhr = new XMLHttpRequest();
         xhr.open("get", impression.uri);
         xhr.send();
@@ -238,7 +234,7 @@ export default class JwPlayerPlugin {
      * @desc show linear ad. this method check ad is not playing and check vmap object for start type of ad
      */
     public showStartLinearAd() {
-        console.debug("show start liner ad");
+        if (this.config.debug) console.debug("show start liner ad");
         let skipShowAd = false;
 
         if (this.adIsShowing) return;
@@ -287,15 +283,16 @@ export default class JwPlayerPlugin {
      * @returns {Promise<IVMAP>}
      */
     private loadVMAP(url: string = this.config.schedule): Promise<IVMAP> {
-        console.debug(`Try to load JwPlayer VMAP from ${url}`);
-
+        if (this.config.debug)  console.debug(`Try to load JwPlayer VMAP from ${url}`);
+        let that = this;
         return new Promise((resolve, reject) => {
             new FP().get((r: string) => {
                 const xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = function () {
                     if (this.readyState === 4 && this.status === 200) {
-                        let VMAP = VMAPParser.JSON(xhr.responseText);
-                        console.debug(`VMAP loaded:`, VMAP);
+                        let parser = new VMAPParser(xhr.responseText, that.config.debug);
+                        let VMAP = parser.JSON();
+                        if (that.config.debug) console.debug(`VMAP loaded:`, VMAP);
                         resolve(VMAP);
                     }
                 };
@@ -317,7 +314,7 @@ export default class JwPlayerPlugin {
      * @param {IAdBreak} adBreak
      */
     private showAd(adBreak: IAdBreak) {
-        console.debug("show ad break", adBreak);
+        if (this.config.debug) console.debug("show ad break", adBreak);
 
         this.currentAdBreak = adBreak;
         switch (adBreak.breakTypes[0]) {
@@ -383,7 +380,8 @@ export default class JwPlayerPlugin {
             skipAfter > -1 && adBreak.extensions
                 ? parseInt(adBreak.extensions[skipAfter].value.toString(), 10)
                 : 1000,
-            true
+            true,
+            this.config.debug
         );
         this.overlayController.setShowControllerBtn(false);
         const duration : number = parseInt(ad.creative[0].duration.replace(new RegExp(":", "g"), ""), 10);
@@ -421,7 +419,7 @@ export default class JwPlayerPlugin {
      * @param {IAdBreak} adBreak
      */
     private showVideoPlayer(ad: Ad, adBreak: IAdBreak) {
-        console.debug("show video ad", ad);
+        if (this.config.debug) console.debug("show video ad", ad);
         let clickThroughUri = ad.creative[0].videoClicks.clickThrough.uri;
         let domainEx = adBreak.extensions
             ? adBreak.extensions.findIndex(e => e.extensionType === "domain")
@@ -448,6 +446,8 @@ export default class JwPlayerPlugin {
             (skipAfter > -1 && adBreak.extensions)
                 ? parseInt(adBreak.extensions[skipAfter].value.toString(), 10)
                 : 1000,
+            false,
+            this.config.debug
         );
         this.overlayController.setShowControllerBtn(true);
         this.overlayController.setOnSkip(() => {

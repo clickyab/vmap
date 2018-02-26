@@ -21,14 +21,16 @@ import {
  */
 export class VMAPParser {
     private xml?: string;
+    private debugMode: boolean = false;
 
     /**
      * @constructor
      * Set initial value
      * @param {string} xml
      */
-    constructor(xml?: string) {
+    constructor(xml?: string, debugMode: boolean = false) {
         if (xml) this.xml = xml;
+        this.debugMode = debugMode;
     }
 
     /**
@@ -114,7 +116,7 @@ export class VMAPParser {
      * @returns {Ad[]}
      */
     private parseAd(ad: any): Ad[] {
-        console.log(ad.InLine);
+        if (this.debugMode) console.debug("Parse ad", ad.InLine);
         // if (ad["InLine"]) {
         let liner: IInlineAd = {
             id: ad._attributes.id,
@@ -327,7 +329,7 @@ export class VMAPParser {
      * @returns {IAdImpression[]}
      */
     private parseImpression(impressionInput: any): IAdImpression[] {
-        console.log(impressionInput._cdata);
+        if (this.debugMode) console.debug("parse Impression", impressionInput._cdata);
         let impressionInputArray = impressionInput;
         if (!Array.isArray(impressionInput)) {
             impressionInputArray = [impressionInput];

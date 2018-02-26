@@ -5,7 +5,7 @@
  */
 /// <reference path="../../types/videojs.d.ts"/>
 
-import VMAPParser from "../parser/index";
+import {VMAPParser} from "../parser/index";
 import {AdBreakType, IAdBreak, IVMAP} from "../definitions/VMAP" ;
 import {Ad, ITrackingEvent, mimetype} from "../definitions/VAST3";
 import ImagePlayer from "../lib/image-player/index";
@@ -94,7 +94,8 @@ export default class VideoJsPlugin {
      * @param {HTMLElement} div
      */
     constructor(videoJsPlayer: Player, config: VideojsPluginOption, div: HTMLElement) {
-        console.debug("Init VideoJs Vast Plugin Class.");
+        console.log(config);
+        if (config.debug) console.debug("Init VideoJs Vast Plugin Class.");
 
         this.player = videoJsPlayer;
         this.config = config;
@@ -106,11 +107,11 @@ export default class VideoJsPlugin {
      * @desc setup plugin by load VMAP object and set player events
      */
     public setup() {
-        console.debug("Setting VideoJs Vast Plugin up.");
+        if (this.config.debug) console.debug("Setting VideoJs Vast Plugin up.");
 
         this.loadVMAP().then(vmap => {
             this.VMAP = vmap;
-            console.debug("VMAP object is loaded", vmap);
+            if (this.config.debug) console.debug("VMAP object is loaded", vmap);
 
             this.player.on("timeupdate", () => {
                 this.timeController()
@@ -202,7 +203,7 @@ export default class VideoJsPlugin {
      *       the api call will be lock for 2 seconds
      */
     private callCompleteViewApi() {
-        console.debug("Call complete view api");
+        if (this.config.debug) console.debug("Call complete view api");
 
         if (this.callCompleteViewApiLock) {
             return;
@@ -225,10 +226,7 @@ export default class VideoJsPlugin {
             return;
         }
 
-        console.debug(
-            "Call complete view api with url: ",
-            creative.trackings[completeTrackingIndex].uri
-        );
+        if (this.config.debug) console.debug("Call complete view api with url: ",creative.trackings[completeTrackingIndex].uri);
         const xhr = new XMLHttpRequest();
         xhr.open("get", creative.trackings[completeTrackingIndex].uri);
         xhr.send();
@@ -240,7 +238,7 @@ export default class VideoJsPlugin {
      *       the api call will be lock for 2 seconds
      */
     private callImpressionAdi() {
-        console.debug("Call impression api");
+        if (this.config.debug) console.debug("Call impression api");
 
         if (this.callImpressionViewApiLock) {
             return;
@@ -255,7 +253,7 @@ export default class VideoJsPlugin {
         const impression = ad.impressions[0];
         if (!impression) return;
 
-        console.debug("Call impression api with url: ", impression.uri);
+        if (this.config.debug) console.debug("Call impression api with url: ", impression.uri);
         const xhr = new XMLHttpRequest();
         xhr.open("get", impression.uri);
         xhr.send();
@@ -266,7 +264,7 @@ export default class VideoJsPlugin {
      * @desc show linear ad. this method check ad is not playing and check vmap object for start type of ad
      */
     public showStartLinearAd() {
-        console.debug("show start liner ad");
+        if (this.config.debug)  console.debug("show start liner ad");
         let skipShowAd = false;
 
         if (this.adIsShowing) return;
@@ -291,7 +289,7 @@ export default class VideoJsPlugin {
      * @desc show linear ad. this method check ad is not playing and check vmap object for end type of ad
      */
     private showEndLinerAd() {
-        console.debug("show end liner ad");
+        if (this.config.debug) console.debug("show end liner ad");
         let skipShowAd = false;
 
         setTimeout(() => {
@@ -320,16 +318,17 @@ export default class VideoJsPlugin {
      * @returns {Promise<IVMAP>}
      */
     private loadVMAP(url: string = this.config.requestUrl): Promise<IVMAP> {
-
-        console.debug(`Try to load VideoJs VMAP from ${url}`);
+        let that = this;
+        if (this.config.debug) console.debug(`Try to load VideoJs VMAP from ${url}`);
 
         return new Promise((resolve, reject) => {
             new FP().get((r: string) => {
                 const xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = function () {
                     if (this.readyState === 4 && this.status === 200) {
-                        let VMAP = VMAPParser.JSON(xhr.responseText);
-                        console.debug(`VMAP loaded:`, VMAP);
+                        let parser = new VMAPParser(xhr.responseText, that.config.debug);
+                        let VMAP = parser.JSON(xhr.responseText);
+                        if (that.config.debug) console.debug(`VMAP loaded:`, VMAP);
                         resolve(VMAP);
                     }
                 };
@@ -351,7 +350,7 @@ export default class VideoJsPlugin {
      * @param {IAdBreak} adBreak
      */
     private showAd(adBreak: IAdBreak) {
-        console.debug("show ad break", adBreak);
+        if (this.config.debug) console.debug("show ad break", adBreak);
 
         this.currentAdBreak = adBreak;
         switch (adBreak.breakTypes[0]) {
@@ -390,7 +389,7 @@ export default class VideoJsPlugin {
      * @param {IAdBreak} adBreak
      */
     private showImagePlayer(ad: Ad, adBreak: IAdBreak) {
-        console.debug("show image player", ad, adBreak);
+        if (this.config.debug) console.debug("show image player", ad, adBreak);
         let clickThroughUri = ad.creative[0].videoClicks.clickThrough.uri;
         let domainEx = adBreak.extensions
             ? adBreak.extensions.findIndex(e => e.extensionType === "domain")
@@ -416,7 +415,8 @@ export default class VideoJsPlugin {
             skipAfter > -1 && adBreak.extensions
                 ? parseInt(adBreak.extensions[skipAfter].value.toString(), 10)
                 : 1000,
-            true
+            true,
+            this.config.debug
         );
         this.overlayController.setShowControllerBtn(false);
 
@@ -459,7 +459,7 @@ export default class VideoJsPlugin {
      * @param {IAdBreak} adBreak
      */
     private showVideoPlayer(ad: Ad, adBreak: IAdBreak) {
-        console.debug("show video ad", ad);
+        if (this.config.debug) console.debug("show video ad", ad);
         let clickThroughUri = ad.creative[0].videoClicks.clickThrough.uri;
         let domainEx = adBreak.extensions
             ? adBreak.extensions.findIndex(e => e.extensionType === "domain")
@@ -485,6 +485,8 @@ export default class VideoJsPlugin {
             (skipAfter > -1 && adBreak.extensions)
                 ? parseInt(adBreak.extensions[skipAfter].value.toString(), 10)
                 : 1000,
+            false,
+            this.config.debug
         );
         this.overlayController.setShowControllerBtn(true);
         this.overlayController.setOnSkip(() => {

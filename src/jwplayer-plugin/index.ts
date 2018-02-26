@@ -3,7 +3,6 @@
 import JwPlayerPlugin from "./plugin";
 
 function JwPlayerPluginFn() {
-    console.debug("Init JwPlayer Vast Plugin.");
 
     if (!jwplayer) return;
 
@@ -22,7 +21,7 @@ function JwPlayerPluginFn() {
         player.onPlaylistItem(() => {
             plugin.setup();
         });
-        console.debug("Init JwPlayer Vast Plugin.");
+        if (conf.advertising.debug) console.debug("Init JwPlayer Vast Plugin.");
     };
 
     const minPlayerVersion = "6.0";

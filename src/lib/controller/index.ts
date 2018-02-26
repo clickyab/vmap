@@ -87,6 +87,12 @@ export default class Controller {
     private linkWrapper: boolean = false;
 
     /**
+     * Link all controller area to ad's link or not
+     * @type {boolean}
+     */
+    private debugMode: boolean = false;
+
+    /**
      * @constructor
      * @param player
      * @param {HTMLElement} div
@@ -100,14 +106,18 @@ export default class Controller {
                 title: string,
                 src: string,
                 skipAfter: number,
-                linkWrapper: boolean = false) {
-        console.debug("Create controller overlay instance.");
+                linkWrapper: boolean = false,
+                debugMode: boolean = false) {
+
+        if (debugMode) console.debug("Create controller overlay instance.");
         this.div = div;
         this.player = player;
         this.title = title;
         this.src = src;
         this.skipAfter = skipAfter;
         this.linkWrapper = linkWrapper;
+        this.debugMode = this.debugMode;
+
     }
 
     /**
@@ -115,7 +125,7 @@ export default class Controller {
      * @desc show controller over the player.
      */
     public show() {
-        console.debug("Show controller overlay.");
+        if (this.debugMode) console.debug("Show controller overlay.");
         this.setTimeLine({position: 0, duration: 0, type: "start"});
         this.overlay = this.getWrapperElement();
         this.div.appendChild(this.overlay);
@@ -126,7 +136,7 @@ export default class Controller {
      * @desc remove controller element and erase all its elements.
      */
     public remove() {
-        console.debug("Remove controller overlay element.");
+        if (this.debugMode) console.debug("Remove controller overlay element.");
         this.div.setAttribute("style", "");
         this.div.innerHTML = "";
     }
@@ -190,7 +200,7 @@ export default class Controller {
             if (status) {
                 this.player.pause();
             } else {
-                this.player.play();
+                this.player.  play();
             }
         };
 
@@ -215,7 +225,6 @@ export default class Controller {
         wrapper.appendChild(this.getTimeLineWrapper());
         wrapper.appendChild(this.getShadow());
 
-        console.log(this.skipAfter);
         setTimeout(() => {
             wrapper.appendChild(this.getSkipAd());
         }, this.skipAfter * 1000);
@@ -458,7 +467,7 @@ export default class Controller {
 
         skipBtn.onclick = e => {
             e.preventDefault();
-            console.debug("skip ad.");
+            if (this.debugMode) console.debug("skip ad.");
             if (this.onSkip) this.onSkip();
         };
 

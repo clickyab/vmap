@@ -65,8 +65,7 @@ export default class VideoPlayer {
      * @desc get video element
      */
     private getVideoElement() {
-        console.log({a: this.div});
-        let videoContainer = this.div.parentElement || document.createElement("div");
+                let videoContainer = this.div.parentElement || document.createElement("div");
         return videoContainer.getElementsByTagName("video")[0];
     }
 }
