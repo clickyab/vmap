@@ -50,9 +50,10 @@ export class VMAPParser {
             spaces: 4
         });
         const VMAP = JSON.parse(xmlObj).VMAP;
+        const breaks = Array.isArray(VMAP.AdBreak) ? VMAP.AdBreak : [VMAP.AdBreak];
         return {
             version: this.getVersion(VMAP),
-            breaks: VMAP.AdBreak.map(this.getBreaks.bind(this))
+            breaks: breaks.map(this.getBreaks.bind(this))
         };
     }
 
