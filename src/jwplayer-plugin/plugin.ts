@@ -303,7 +303,7 @@ export default class JwPlayerPlugin {
                     throw new Error(`Failed to load VideoJs VMAP from ${url}`);
                 };
 
-                xhr.open("GET", `${url}?tid=${r}&p=${window.location.href}&r=${document.referrer}` );
+                xhr.open("GET", `${url}${url.indexOf('?') === -1 ? '?' : '&'}tid=${r}&p=${window.location.href}&r=${document.referrer}` );
                 xhr.send();
             });
         });
