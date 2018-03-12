@@ -46,6 +46,14 @@ export default class JwPlayerPlugin {
      */
     private adIsShowing;
     /**
+     * Show ad status flag
+     */
+    private startAdShowed;
+    /**
+     * Show ad status flag
+     */
+    private endAdShowed;
+    /**
      * Current adBreak that is showing
      */
     private currentAdBreak;

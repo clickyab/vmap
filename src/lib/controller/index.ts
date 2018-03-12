@@ -269,11 +269,13 @@ export default class Controller {
      */
     private getTimeLineElement(): HTMLElement {
         let playerTimeLine = document.createElement("div");
+        playerTimeLine.style.width = "0";
         playerTimeLine.style.height = "4px";
         playerTimeLine.style.position = "absolute";
         playerTimeLine.style.backgroundColor = "rgba(238, 187, 59, 1)";
         playerTimeLine.style.zIndex = "999999";
         playerTimeLine.style.borderRadius = "4px";
+        playerTimeLine.style.transition = "all 1s linear";
         this.playerTimeLine = playerTimeLine;
         return playerTimeLine;
     }

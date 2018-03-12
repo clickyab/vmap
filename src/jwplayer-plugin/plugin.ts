@@ -69,6 +69,16 @@ export default class JwPlayerPlugin {
     private adIsShowing: boolean = false;
 
     /**
+     * Show ad status flag
+     */
+    private startAdShowed: boolean = false;
+
+    /**
+     * Show ad status flag
+     */
+    private endAdShowed: boolean = false;
+
+    /**
      * Current adBreak that is showing
      */
     private currentAdBreak: IAdBreak;
@@ -238,8 +248,9 @@ export default class JwPlayerPlugin {
         if (this.config.debug) console.debug("show start liner ad");
         let skipShowAd = false;
 
-        if (this.adIsShowing) return;
+        if (this.adIsShowing || this.startAdShowed) return;
         this.adIsShowing = true;
+        this.startAdShowed = true;
 
         if (this.player.getPosition() >= 0.1) return;
 
@@ -262,8 +273,9 @@ export default class JwPlayerPlugin {
     private showEndLinerAd() {
         let skipShowAd = false;
 
-        if (this.adIsShowing) return;
+        if (this.adIsShowing || this.endAdShowed) return;
         this.adIsShowing = true;
+        this.endAdShowed = true;
 
         this.VMAP.breaks.forEach(adBreak => {
             if (
