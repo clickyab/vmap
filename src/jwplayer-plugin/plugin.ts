@@ -133,6 +133,9 @@ export default class JwPlayerPlugin {
      */
     private timeController(position: IPosition) {
         this.overlayController.setTimeLine(position);
+        if (!this.callCompleteViewApiLock && this.adIsShowing && position.position >= 30) {
+            this.callCompleteViewApi();
+        }
     }
 
     /**
@@ -152,6 +155,7 @@ export default class JwPlayerPlugin {
 
             setTimeout(() => {
                 this.adIsShowing = false;
+                this.callCompleteViewApiLock = false;
             }, 2000);
 
             if (this.currentAdBreak.timeOffset === "start") {
@@ -172,6 +176,7 @@ export default class JwPlayerPlugin {
                     this.imagePlayer = null;
                 }
             }
+
         } else if (skipped === false) {
             this.showEndLinerAd();
         }
@@ -189,9 +194,6 @@ export default class JwPlayerPlugin {
             return;
         }
         this.callCompleteViewApiLock = true;
-        setTimeout(() => {
-            this.callCompleteViewApiLock = false;
-        }, 2000);
 
         const ad = this.currentAdBreak.adSource.VASTAdData.ads[0];
         const creative = ad.creative[0];

@@ -148,6 +148,10 @@ export default class VideoJsPlugin {
         } else {
             if (this.overlayController) this.overlayController.setTimeLine(position);
         }
+
+        if (!this.callCompleteViewApiLock && this.adIsShowing && position.position >= 30) {
+            this.callCompleteViewApi();
+        }
     }
 
     /**
@@ -208,9 +212,6 @@ export default class VideoJsPlugin {
             return;
         }
         this.callCompleteViewApiLock = true;
-        setTimeout(() => {
-            this.callCompleteViewApiLock = false;
-        }, 2000);
 
         const ad = this.currentAdBreak.adSource.VASTAdData.ads[0];
         const creative = ad.creative[0];
