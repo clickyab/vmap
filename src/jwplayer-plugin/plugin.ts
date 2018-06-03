@@ -339,6 +339,7 @@ export default class JwPlayerPlugin {
                 switch (mediaFile.mimetype) {
                     case mimetype.IMAGE_GIF:
                     case mimetype.IMAGE_JPEG:
+                    case mimetype.IMAGE_JPG:
                     case mimetype.IMAGE_PNG:
                         this.showImagePlayer(adBreak.adSource.VASTAdData.ads[0], adBreak);
                         break;

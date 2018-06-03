@@ -240,6 +240,7 @@ export enum mimetype {
   "IMAGE_GIF" = "image/gif",
   "IMAGE_PNG" = "image/png",
   "IMAGE_JPEG" = "image/jpeg",
+  "IMAGE_JPG" = "image/jpg",
   "VIDEO_MP4" = "video/mp4"
 }
 
